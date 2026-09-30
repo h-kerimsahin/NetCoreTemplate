@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Core/">
+    <Project Path="Core/NetCoreTemplate.Application/NetCoreTemplate.Application.csproj" />
+    <Project Path="Core/NetCoreTemplate.Domain/NetCoreTemplate.Domain.csproj" />
+    <Project Path="Core/NetCoreTemplate.Infrastructure/NetCoreTemplate.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Presentation/">
+    <Project Path="Presentation/NetCoreTemplate.Api/NetCoreTemplate.Api.csproj" />
+  </Folder>
+</Solution>
