@@ -1,6 +1,8 @@
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using NetCoreTemplate.Application.DTOs.Auth;
+using NetCoreTemplate.Application.DTOs.Common;
 using NetCoreTemplate.Application.Exceptions;
 using NetCoreTemplate.Domain.Enums;
 using NetCoreTemplate.Domain.Interfaces;
@@ -8,7 +10,7 @@ using NetCoreTemplate.Domain.Interfaces.Security;
 
 namespace NetCoreTemplate.Application.Features.Auth.Commands.Login;
 
-public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponseDto>
+public class LoginCommandHandler : IRequestHandler<LoginCommand, ApiResponse<LoginResponseDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPasswordHasher _passwordHasher;
@@ -25,18 +27,18 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponseDt
         _mapper = mapper;
     }
 
-    public async Task<LoginResponseDto> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResponse<LoginResponseDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var user = await _unitOfWork.AppUsers.GetByEmailOrUserNameAsync(request.EmailOrUserName, cancellationToken);
         if (user == null)
         {
-            throw new UnauthorizedException("Invalid credentials");
+            throw new UnauthorizedException("Geçersiz giriş bilgileri");
         }
 
         if (user.IsLockedOut)
         {
             await _activityLogger.LogAsync(user.Id, UserActivityType.AccountLocked, "Account locked due to failed login attempts", ipAddress: request.IpAddress, userAgent: request.UserAgent, cancellationToken: cancellationToken);
-            throw new UnauthorizedException($"Account is locked out until {user.LockoutEndDate:O}");
+            throw new UnauthorizedException($"Hesap şu ana kadar kilitlendi: {user.LockoutEndDate:O}");
         }
 
         if (!_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
@@ -44,7 +46,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponseDt
             user.RecordFailedLogin();
             await _activityLogger.LogAsync(user.Id, UserActivityType.LoginFailed, $"Failed login attempt from {request.IpAddress}", ipAddress: request.IpAddress, userAgent: request.UserAgent, cancellationToken: cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            throw new UnauthorizedException("Invalid credentials");
+            throw new UnauthorizedException("Geçersiz giriş bilgileri");
         }
 
         user.RecordSuccessfulLogin();
@@ -59,6 +61,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponseDt
         await _activityLogger.LogAsync(user.Id, UserActivityType.Login, $"Successful login from {request.IpAddress}", ipAddress: request.IpAddress, userAgent: request.UserAgent, cancellationToken: cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new LoginResponseDto(accessToken, accessExpires, refreshTokenRaw, refreshExpires);
+        var dto = new LoginResponseDto(accessToken, accessExpires, refreshTokenRaw, refreshExpires);
+        return ApiResponse.Success(dto, StatusCodes.Status200OK, "Giriş başarılı.");
     }
 }

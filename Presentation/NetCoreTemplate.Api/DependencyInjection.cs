@@ -2,8 +2,10 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using NetCoreTemplate.Api.Endpoints;
+using NetCoreTemplate.Api.Idempotency;
 using NetCoreTemplate.Application;
 using NetCoreTemplate.Infrastructure;
+using NetCoreTemplate.Infrastructure.Idempotency;
 using NetCoreTemplate.Infrastructure.Logging;
 using Scalar.AspNetCore;
 using Serilog;
@@ -22,6 +24,8 @@ public static class DependencyInjection
         builder.Services.AddApplicationServices();
         builder.Services.AddInfrastructureServices(config);
         builder.Services.AddHttpContextAccessor();
+
+        builder.Services.Configure<IdempotencySettings>(config.GetSection("Idempotency"));
 
         builder.Services.AddCors(options =>
         {

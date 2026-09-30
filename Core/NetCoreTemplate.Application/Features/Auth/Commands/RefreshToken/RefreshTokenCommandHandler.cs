@@ -1,6 +1,8 @@
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NetCoreTemplate.Application.DTOs.Auth;
+using NetCoreTemplate.Application.DTOs.Common;
 using NetCoreTemplate.Application.Exceptions;
 using NetCoreTemplate.Domain.Enums;
 using NetCoreTemplate.Domain.Interfaces;
@@ -8,7 +10,7 @@ using NetCoreTemplate.Domain.Interfaces.Security;
 
 namespace NetCoreTemplate.Application.Features.Auth.Commands.RefreshToken;
 
-public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, RefreshTokenResponseDto>
+public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, ApiResponse<RefreshTokenResponseDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenService _tokenService;
@@ -21,7 +23,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, R
         _passwordHasher = passwordHasher;
     }
 
-    public async Task<RefreshTokenResponseDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResponse<RefreshTokenResponseDto>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
         var activeTokens = await _unitOfWork.AppUserRefreshTokens.GetWhere(t => !t.IsRevoked && t.TokenType == TokenType.RefreshToken, false).ToListAsync(cancellationToken);
         var matching = activeTokens.FirstOrDefault(t => _passwordHasher.VerifyPassword(request.Token, t.Token));
@@ -40,6 +42,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, R
         await _unitOfWork.AppUserRefreshTokens.AddAsync(new Domain.Entities.AppUserRefreshToken(user.Id, _passwordHasher.HashPassword(newRefreshRaw), newRefreshExpires, TokenType.RefreshToken, request.IpAddress), cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new RefreshTokenResponseDto(accessToken, accessExpires, newRefreshRaw, newRefreshExpires);
+        var dto = new RefreshTokenResponseDto(accessToken, accessExpires, newRefreshRaw, newRefreshExpires);
+        return ApiResponse.Success(dto, StatusCodes.Status200OK, "Token yenileme başarılı.");
     }
 }

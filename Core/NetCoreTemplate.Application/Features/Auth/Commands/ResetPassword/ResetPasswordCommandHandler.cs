@@ -1,5 +1,7 @@
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using NetCoreTemplate.Application.DTOs.Common;
 using NetCoreTemplate.Application.Exceptions;
 using NetCoreTemplate.Domain.Enums;
 using NetCoreTemplate.Domain.Interfaces;
@@ -7,7 +9,7 @@ using NetCoreTemplate.Domain.Interfaces.Security;
 
 namespace NetCoreTemplate.Application.Features.Auth.Commands.ResetPassword;
 
-public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, bool>
+public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, ApiResponse<bool>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPasswordHasher _passwordHasher;
@@ -20,7 +22,7 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
         _activityLogger = activityLogger;
     }
 
-    public async Task<bool> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResponse<bool>> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
     {
         var user = await _unitOfWork.AppUsers.GetByEmailAsync(request.Email, cancellationToken) ?? throw new NotFoundException("User with email not found");
         var resetToken = await _unitOfWork.AppUserRefreshTokens.GetWhere(t => t.AppUserId == user.Id && t.TokenType == TokenType.ResetPassword && !t.IsRevoked, false).FirstOrDefaultAsync(cancellationToken);
@@ -34,6 +36,6 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
         await _activityLogger.LogAsync(user.Id, UserActivityType.PasswordReset, "Password reset successfully", cancellationToken: cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return true;
+        return ApiResponse.Success(true, StatusCodes.Status200OK, "Şifreniz başarıyla güncellendi.");
     }
 }

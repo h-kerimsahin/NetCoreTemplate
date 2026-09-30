@@ -1,5 +1,7 @@
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using NetCoreTemplate.Application.DTOs.Common;
 using NetCoreTemplate.Application.DTOs.UserProfile;
 using NetCoreTemplate.Application.Exceptions;
 using NetCoreTemplate.Domain.Enums;
@@ -8,7 +10,7 @@ using NetCoreTemplate.Domain.Interfaces.Security;
 
 namespace NetCoreTemplate.Application.Features.UserProfile.Commands.Update;
 
-public class UpdateUserProfileCommandHandler : IRequestHandler<UpdateUserProfileCommand, UserProfileDto>
+public class UpdateUserProfileCommandHandler : IRequestHandler<UpdateUserProfileCommand, ApiResponse<UserProfileDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -21,7 +23,7 @@ public class UpdateUserProfileCommandHandler : IRequestHandler<UpdateUserProfile
         _activityLogger = activityLogger;
     }
 
-    public async Task<UserProfileDto> Handle(UpdateUserProfileCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResponse<UserProfileDto>> Handle(UpdateUserProfileCommand request, CancellationToken cancellationToken)
     {
         var profile = await _unitOfWork.AppUserProfiles.GetByAppUserIdAsync(request.AppUserId, cancellationToken) ?? throw new NotFoundException(nameof(Domain.Entities.AppUserProfile), request.AppUserId);
 
@@ -31,6 +33,7 @@ public class UpdateUserProfileCommandHandler : IRequestHandler<UpdateUserProfile
         await _activityLogger.LogAsync(request.AppUserId, UserActivityType.ProfileUpdated, "User profile updated", nameof(Domain.Entities.AppUserProfile), profile.Id, request.IpAddress, cancellationToken: cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<UserProfileDto>(profile);
+        var dto = _mapper.Map<UserProfileDto>(profile);
+        return ApiResponse.Success(dto, StatusCodes.Status200OK, "Profil güncelleme başarılı.");
     }
 }

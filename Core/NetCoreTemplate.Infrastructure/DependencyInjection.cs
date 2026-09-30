@@ -5,6 +5,7 @@ using NetCoreTemplate.Domain.Interfaces;
 using NetCoreTemplate.Domain.Interfaces.Repositories;
 using NetCoreTemplate.Domain.Interfaces.Security;
 using NetCoreTemplate.Domain.Interfaces.Services;
+using NetCoreTemplate.Infrastructure.Idempotency;
 using NetCoreTemplate.Infrastructure.Logging;
 using NetCoreTemplate.Infrastructure.Persistence;
 using NetCoreTemplate.Infrastructure.Persistence.Repositories;
@@ -34,6 +35,10 @@ public static class DependencyInjection
 
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
         services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+        services.Configure<IdempotencySettings>(configuration.GetSection("Idempotency"));
+
+        services.AddMemoryCache();
+        services.AddScoped<IIdempotencyService, MemoryIdempotencyService>();
 
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddScoped<ITokenService, JwtTokenService>();

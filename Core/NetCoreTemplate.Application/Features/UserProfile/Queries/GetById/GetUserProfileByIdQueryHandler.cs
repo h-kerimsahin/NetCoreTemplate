@@ -1,12 +1,14 @@
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using NetCoreTemplate.Application.DTOs.Common;
 using NetCoreTemplate.Application.DTOs.UserProfile;
 using NetCoreTemplate.Application.Exceptions;
 using NetCoreTemplate.Domain.Interfaces;
 
 namespace NetCoreTemplate.Application.Features.UserProfile.Queries.GetById;
 
-public class GetUserProfileByIdQueryHandler : IRequestHandler<GetUserProfileByIdQuery, UserProfileDto>
+public class GetUserProfileByIdQueryHandler : IRequestHandler<GetUserProfileByIdQuery, ApiResponse<UserProfileDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -17,9 +19,10 @@ public class GetUserProfileByIdQueryHandler : IRequestHandler<GetUserProfileById
         _mapper = mapper;
     }
 
-    public async Task<UserProfileDto> Handle(GetUserProfileByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResponse<UserProfileDto>> Handle(GetUserProfileByIdQuery request, CancellationToken cancellationToken)
     {
         var profile = await _unitOfWork.AppUserProfiles.GetByIdAsync(request.ProfileId, cancellationToken) ?? throw new NotFoundException(nameof(Domain.Entities.AppUserProfile), request.ProfileId);
-        return _mapper.Map<UserProfileDto>(profile);
+        var dto = _mapper.Map<UserProfileDto>(profile);
+        return ApiResponse.Success(dto, StatusCodes.Status200OK, "Profil bilgileri başarıyla getirildi.");
     }
 }

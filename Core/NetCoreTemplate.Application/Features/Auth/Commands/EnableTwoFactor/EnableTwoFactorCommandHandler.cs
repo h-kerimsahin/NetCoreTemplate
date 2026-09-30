@@ -1,4 +1,6 @@
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using NetCoreTemplate.Application.DTOs.Common;
 using NetCoreTemplate.Application.Exceptions;
 using NetCoreTemplate.Domain.Enums;
 using NetCoreTemplate.Domain.Interfaces;
@@ -7,7 +9,7 @@ using NetCoreTemplate.Domain.Interfaces.Services;
 
 namespace NetCoreTemplate.Application.Features.Auth.Commands.EnableTwoFactor;
 
-public class EnableTwoFactorCommandHandler : IRequestHandler<EnableTwoFactorCommand, bool>
+public class EnableTwoFactorCommandHandler : IRequestHandler<EnableTwoFactorCommand, ApiResponse<bool>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserActivityLogger _activityLogger;
@@ -22,7 +24,7 @@ public class EnableTwoFactorCommandHandler : IRequestHandler<EnableTwoFactorComm
         _tokenService = tokenService;
     }
 
-    public async Task<bool> Handle(EnableTwoFactorCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResponse<bool>> Handle(EnableTwoFactorCommand request, CancellationToken cancellationToken)
     {
         var user = await _unitOfWork.AppUsers.GetByIdAsync(request.UserId, cancellationToken) ?? throw new NotFoundException(nameof(Domain.Entities.AppUser), request.UserId);
         var type = Enum.TryParse<TwoFactorType>(request.Type, true, out var t) ? t : TwoFactorType.Email;
@@ -39,6 +41,6 @@ public class EnableTwoFactorCommandHandler : IRequestHandler<EnableTwoFactorComm
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        return true;
+        return ApiResponse.Success(true, StatusCodes.Status200OK, "İki faktörlü doğrulama etkinleştirildi.");
     }
 }

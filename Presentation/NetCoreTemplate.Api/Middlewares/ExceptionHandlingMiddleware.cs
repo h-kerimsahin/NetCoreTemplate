@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NetCoreTemplate.Application.DTOs.Common;
 using NetCoreTemplate.Application.Exceptions;
 using NetCoreTemplate.Domain.Entities;
 using NetCoreTemplate.Domain.Enums;
@@ -16,6 +17,12 @@ public class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+    };
 
     public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
     {
@@ -73,17 +80,25 @@ public class ExceptionHandlingMiddleware
 
             context.Response.ContentType = "application/json";
 
-            var (statusCode, response) = ex switch
+            ApiResponse response = ex switch
             {
-                NotFoundException ne => (HttpStatusCode.NotFound, (object)new { error = "Not Found", message = ne.Message }),
-                ValidationException ve => (HttpStatusCode.BadRequest, (object)new { error = "Validation Error", message = ve.Message, errors = ve.Errors }),
-                BusinessException be => (HttpStatusCode.BadRequest, (object)new { error = "Business Rule Violation", message = be.Message }),
-                UnauthorizedException ue => (HttpStatusCode.Unauthorized, (object)new { error = "Unauthorized", message = ue.Message }),
-                _ => (HttpStatusCode.InternalServerError, (object)new { error = "Internal Server Error", message = env.IsDevelopment() ? ex.ToString() : "An unexpected error occurred" })
+                NotFoundException ne => ApiResponse.Fail((int)HttpStatusCode.NotFound, ne.Message,
+                    new[] { $"Kaynak bulunamadı: {ne.Message}" }),
+
+                ValidationException ve => ApiResponse.Fail((int)HttpStatusCode.BadRequest,
+                    "Doğrulama hatası oluştu.", ve.Errors.SelectMany(kv => kv.Value.Select(msg => $"{kv.Key}: {msg}"))),
+
+                BusinessException be => ApiResponse.Fail((int)HttpStatusCode.BadRequest, be.Message),
+
+                UnauthorizedException ue => ApiResponse.Fail((int)HttpStatusCode.Unauthorized,
+                    string.IsNullOrWhiteSpace(ue.Message) ? "Kimlik doğrulama başarısız." : ue.Message),
+
+                _ => ApiResponse.Fail((int)HttpStatusCode.InternalServerError,
+                    env.IsDevelopment() ? ex.ToString() : "Beklenmedik bir sunucu hatası oluştu.")
             };
 
-            context.Response.StatusCode = (int)statusCode;
-            await context.Response.WriteAsync(JsonSerializer.Serialize(response, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
+            context.Response.StatusCode = response.StatusCode;
+            await context.Response.WriteAsync(JsonSerializer.Serialize(response, JsonOptions));
         }
     }
 }

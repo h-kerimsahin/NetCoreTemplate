@@ -1,4 +1,6 @@
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using NetCoreTemplate.Application.DTOs.Common;
 using NetCoreTemplate.Domain.Enums;
 using NetCoreTemplate.Domain.Interfaces;
 using NetCoreTemplate.Domain.Interfaces.Security;
@@ -6,7 +8,7 @@ using NetCoreTemplate.Domain.Interfaces.Services;
 
 namespace NetCoreTemplate.Application.Features.Auth.Commands.ForgotPassword;
 
-public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordCommand, bool>
+public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordCommand, ApiResponse<bool>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenService _tokenService;
@@ -21,7 +23,7 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
         _emailService = emailService;
     }
 
-    public async Task<bool> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResponse<bool>> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
         var user = await _unitOfWork.AppUsers.GetByEmailAsync(request.Email, cancellationToken);
         if (user != null)
@@ -36,6 +38,6 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
             var resetLink = $"https://localhost:7000/reset-password?token={resetTokenRaw}&email={Uri.EscapeDataString(request.Email)}";
             try { await _emailService.SendResetPasswordEmailAsync(request.Email, resetLink, cancellationToken); } catch { }
         }
-        return true;
+        return ApiResponse.Success(true, StatusCodes.Status200OK, "Şifre sıfırlama bağlantısı e-posta adresinize gönderildi (kayıtlı ise).");
     }
 }

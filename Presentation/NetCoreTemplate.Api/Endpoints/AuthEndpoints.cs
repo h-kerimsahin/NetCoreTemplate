@@ -1,7 +1,11 @@
 using System.Security.Claims;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using NetCoreTemplate.Api.Idempotency;
 using NetCoreTemplate.Application.DTOs.Auth;
+using NetCoreTemplate.Application.DTOs.Common;
 using NetCoreTemplate.Application.Features.Auth.Commands.EnableTwoFactor;
 using NetCoreTemplate.Application.Features.Auth.Commands.Login;
 using NetCoreTemplate.Application.Features.Auth.Commands.Logout;
@@ -25,64 +29,64 @@ public class AuthEndpoints : IEndpoint
         {
             var ip = ctx.Connection.RemoteIpAddress?.ToString();
             var ua = ctx.Request.Headers["User-Agent"].ToString();
-            var result = await sender.Send(new LoginCommand(req.EmailOrUserName, req.Password, req.RememberMe, ip, ua));
-            return Results.Ok(result);
-        }).AllowAnonymous().WithName("Login");
+            var response = await sender.Send(new LoginCommand(req.EmailOrUserName, req.Password, req.RememberMe, ip, ua));
+            return Results.Json(response, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }, statusCode: response.StatusCode);
+        }).AllowAnonymous().WithName("Login").AddEndpointFilter<IdempotencyEndpointFilter>();
 
         group.MapPost("register", async ([FromBody] RegisterRequestDto req, [FromServices] ISender sender, HttpContext ctx) =>
         {
             var ip = ctx.Connection.RemoteIpAddress?.ToString();
-            var result = await sender.Send(new RegisterCommand(req.UserName, req.Email, req.Password, req.ConfirmPassword, req.FirstName, req.LastName, ip));
-            return Results.CreatedAtRoute("Login", result);
-        }).AllowAnonymous().WithName("Register");
+            var response = await sender.Send(new RegisterCommand(req.UserName, req.Email, req.Password, req.ConfirmPassword, req.FirstName, req.LastName, ip));
+            return Results.Json(response, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }, statusCode: response.StatusCode);
+        }).AllowAnonymous().WithName("Register").AddEndpointFilter<IdempotencyEndpointFilter>();
 
         group.MapPost("refresh", async ([FromBody] RefreshTokenRequestDto req, [FromServices] ISender sender, HttpContext ctx) =>
         {
             var ip = ctx.Connection.RemoteIpAddress?.ToString();
-            var result = await sender.Send(new RefreshTokenCommand(req.RefreshToken, ip));
-            return Results.Ok(result);
-        }).AllowAnonymous();
+            var response = await sender.Send(new RefreshTokenCommand(req.RefreshToken, ip));
+            return Results.Json(response, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }, statusCode: response.StatusCode);
+        }).AllowAnonymous().AddEndpointFilter<IdempotencyEndpointFilter>();
 
         group.MapPost("forgot-password", async ([FromBody] ForgotPasswordRequestDto req, [FromServices] ISender sender) =>
         {
-            await sender.Send(new ForgotPasswordCommand(req.Email));
-            return Results.Ok(new { Message = "If the email exists, a reset link has been sent." });
-        }).AllowAnonymous();
+            var response = await sender.Send(new ForgotPasswordCommand(req.Email));
+            return Results.Json(response, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }, statusCode: response.StatusCode);
+        }).AllowAnonymous().AddEndpointFilter<IdempotencyEndpointFilter>();
 
         group.MapPost("reset-password", async ([FromBody] ResetPasswordRequestDto req, [FromServices] ISender sender) =>
         {
-            await sender.Send(new ResetPasswordCommand(req.Email, req.Token, req.NewPassword, req.ConfirmNewPassword));
-            return Results.Ok(new { Message = "Password has been reset successfully." });
-        }).AllowAnonymous();
+            var response = await sender.Send(new ResetPasswordCommand(req.Email, req.Token, req.NewPassword, req.ConfirmNewPassword));
+            return Results.Json(response, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }, statusCode: response.StatusCode);
+        }).AllowAnonymous().AddEndpointFilter<IdempotencyEndpointFilter>();
 
         group.MapPost("enable-2fa", async ([FromBody] EnableTwoFactorRequestDto req, [FromServices] ISender sender, ClaimsPrincipal user) =>
         {
             var userId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            await sender.Send(new EnableTwoFactorCommand(userId, req.Type));
-            return Results.Ok(new { Message = $"2FA has been enabled via {req.Type}. Check your email for the verification code." });
-        }).RequireAuthorization();
+            var response = await sender.Send(new EnableTwoFactorCommand(userId, req.Type));
+            return Results.Json(response, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }, statusCode: response.StatusCode);
+        }).RequireAuthorization().AddEndpointFilter<IdempotencyEndpointFilter>();
 
         group.MapPost("verify-2fa", async ([FromBody] VerifyTwoFactorRequestDto req, [FromServices] ISender sender, HttpContext ctx) =>
         {
             var ip = ctx.Connection.RemoteIpAddress?.ToString();
             var ua = ctx.Request.Headers["User-Agent"].ToString();
-            var result = await sender.Send(new VerifyTwoFactorCommand(req.EmailOrUserName, req.Code, ip, ua));
-            return Results.Ok(result);
-        }).AllowAnonymous();
+            var response = await sender.Send(new VerifyTwoFactorCommand(req.EmailOrUserName, req.Code, ip, ua));
+            return Results.Json(response, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }, statusCode: response.StatusCode);
+        }).AllowAnonymous().AddEndpointFilter<IdempotencyEndpointFilter>();
 
         group.MapPost("logout", async ([FromServices] ISender sender, ClaimsPrincipal user, HttpContext ctx) =>
         {
             var userId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var ip = ctx.Connection.RemoteIpAddress?.ToString();
-            var result = await sender.Send(new LogoutCommand(userId, ip));
-            return Results.Ok(result);
-        }).RequireAuthorization();
+            var response = await sender.Send(new LogoutCommand(userId, ip));
+            return Results.Json(response, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }, statusCode: response.StatusCode);
+        }).RequireAuthorization().AddEndpointFilter<IdempotencyEndpointFilter>();
 
         group.MapGet("me", async ([FromServices] ISender sender, ClaimsPrincipal user) =>
         {
             var userId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            var result = await sender.Send(new MeQuery(userId));
-            return Results.Ok(result);
+            var response = await sender.Send(new MeQuery(userId));
+            return Results.Json(response, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }, statusCode: response.StatusCode);
         }).RequireAuthorization().WithName("Me");
     }
 }
