@@ -1,19 +1,22 @@
-var builder = WebApplication.CreateBuilder(args);
+using NetCoreTemplate.Api;
+using Serilog;
 
-builder.Services.AddOpenApi();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+try
 {
-    app.MapOpenApi();
+    Log.Information("Starting NetCoreTemplate API");
+    var builder = WebApplication.CreateBuilder(args);
+    builder.ConfigureServices();
+    var app = builder.Build();
+    app.ConfigurePipeline();
+    app.Run();
+    return 0;
 }
-
-
-
-
-app.Run();
-
-
-
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Host terminated unexpectedly");
+    return 1;
+}
+finally
+{
+    Log.CloseAndFlush();
+}

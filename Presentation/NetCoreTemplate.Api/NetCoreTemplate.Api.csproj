@@ -7,7 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\NetCoreTemplate.Infrastructure\NetCoreTemplate.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="11.0.0-preview.6.26359.118" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="11.0.0-preview.6.26359.118" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="11.0.0-preview.6.26359.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Scalar.AspNetCore" Version="2.17.12" />
+    <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
   </ItemGroup>
 
 </Project>
