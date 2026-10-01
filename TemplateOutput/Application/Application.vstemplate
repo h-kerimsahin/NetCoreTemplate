@@ -1,0 +1,124 @@
+﻿<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>$safeprojectname.Application</Name>
+    <Description>Application Layer â€” DTOs, CQRS, Validators, Mappings</Description>
+    <ProjectType>CSharp</ProjectType>
+    <SortOrder>20</SortOrder>
+    <CreateNewFolder>false</CreateNewFolder>
+    <DefaultName>Application</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="$safeprojectname.Application.csproj" File="$safeprojectname.Application.csproj" ReplaceParameters="true">      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.Application.csproj">$safeprojectname$.Application.csproj</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DependencyInjection.cs">DependencyInjection.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Behaviors\LoggingBehavior.cs">Behaviors\LoggingBehavior.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Behaviors\ValidationBehavior.cs">Behaviors\ValidationBehavior.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Auth\EnableTwoFactorRequestDto.cs">DTOs\Auth\EnableTwoFactorRequestDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Auth\ForgotPasswordRequestDto.cs">DTOs\Auth\ForgotPasswordRequestDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Auth\LoginRequestDto.cs">DTOs\Auth\LoginRequestDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Auth\LoginResponseDto.cs">DTOs\Auth\LoginResponseDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Auth\LogoutCommand.cs">DTOs\Auth\LogoutCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Auth\MeResponseDto.cs">DTOs\Auth\MeResponseDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Auth\RefreshTokenRequestDto.cs">DTOs\Auth\RefreshTokenRequestDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Auth\RefreshTokenResponseDto.cs">DTOs\Auth\RefreshTokenResponseDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Auth\RegisterRequestDto.cs">DTOs\Auth\RegisterRequestDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Auth\RegisterResponseDto.cs">DTOs\Auth\RegisterResponseDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Auth\ResetPasswordRequestDto.cs">DTOs\Auth\ResetPasswordRequestDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Auth\VerifyTwoFactorRequestDto.cs">DTOs\Auth\VerifyTwoFactorRequestDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Auth\VerifyTwoFactorResponseDto.cs">DTOs\Auth\VerifyTwoFactorResponseDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Common\ApiResponse.cs">DTOs\Common\ApiResponse.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Common\AuditEntryDto.cs">DTOs\Common\AuditEntryDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Common\FileUploadResultDto.cs">DTOs\Common\FileUploadResultDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Common\LogoutAllDevicesDto.cs">DTOs\Common\LogoutAllDevicesDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Common\NotificationDto.cs">DTOs\Common\NotificationDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Common\NotificationSendRequestDto.cs">DTOs\Common\NotificationSendRequestDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Common\PagedRequest.cs">DTOs\Common\PagedRequest.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Common\PasswordStrength.cs">DTOs\Common\PasswordStrength.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Common\PermissionDto.cs">DTOs\Common\PermissionDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Common\PermissionGrantDto.cs">DTOs\Common\PermissionGrantDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Common\RestoreEntityRequestDto.cs">DTOs\Common\RestoreEntityRequestDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Common\RoleAssignRequestDto.cs">DTOs\Common\RoleAssignRequestDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Common\RoleDto.cs">DTOs\Common\RoleDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Common\UserDto.cs">DTOs\Common\UserDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Settings\LockoutSettings.cs">DTOs\Settings\LockoutSettings.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Settings\PasswordSettings.cs">DTOs\Settings\PasswordSettings.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\UserProfile\UpdateUserProfileRequestDto.cs">DTOs\UserProfile\UpdateUserProfileRequestDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\UserProfile\UserProfileDto.cs">DTOs\UserProfile\UserProfileDto.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Exceptions\BusinessException.cs">Exceptions\BusinessException.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Exceptions\NotFoundException.cs">Exceptions\NotFoundException.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Exceptions\UnauthorizedException.cs">Exceptions\UnauthorizedException.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Exceptions\ValidationException.cs">Exceptions\ValidationException.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\AuditEntries\Queries\GetAuditByEntityIdPaged\GetAuditByEntityIdPagedQuery.cs">Features\AuditEntries\Queries\GetAuditByEntityIdPaged\GetAuditByEntityIdPagedQuery.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\AuditEntries\Queries\GetAuditByUserIdPaged\GetAuditByUserIdPagedQuery.cs">Features\AuditEntries\Queries\GetAuditByUserIdPaged\GetAuditByUserIdPagedQuery.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\ChangePassword\ChangePasswordCommand.cs">Features\Auth\Commands\ChangePassword\ChangePasswordCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\ChangePassword\ChangePasswordCommandHandler.cs">Features\Auth\Commands\ChangePassword\ChangePasswordCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\ConfirmEmail\ConfirmEmailCommand.cs">Features\Auth\Commands\ConfirmEmail\ConfirmEmailCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\ConfirmEmail\ConfirmEmailCommandHandler.cs">Features\Auth\Commands\ConfirmEmail\ConfirmEmailCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\EnableTwoFactor\EnableTwoFactorCommand.cs">Features\Auth\Commands\EnableTwoFactor\EnableTwoFactorCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\EnableTwoFactor\EnableTwoFactorCommandHandler.cs">Features\Auth\Commands\EnableTwoFactor\EnableTwoFactorCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\ForgotPassword\ForgotPasswordCommand.cs">Features\Auth\Commands\ForgotPassword\ForgotPasswordCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\ForgotPassword\ForgotPasswordCommandHandler.cs">Features\Auth\Commands\ForgotPassword\ForgotPasswordCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\ForgotPassword\ForgotPasswordCommandValidator.cs">Features\Auth\Commands\ForgotPassword\ForgotPasswordCommandValidator.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\Login\LoginCommand.cs">Features\Auth\Commands\Login\LoginCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\Login\LoginCommandHandler.cs">Features\Auth\Commands\Login\LoginCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\Login\LoginCommandValidator.cs">Features\Auth\Commands\Login\LoginCommandValidator.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\Logout\LogoutCommand.cs">Features\Auth\Commands\Logout\LogoutCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\Logout\LogoutCommandHandler.cs">Features\Auth\Commands\Logout\LogoutCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\RefreshToken\RefreshTokenCommand.cs">Features\Auth\Commands\RefreshToken\RefreshTokenCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\RefreshToken\RefreshTokenCommandHandler.cs">Features\Auth\Commands\RefreshToken\RefreshTokenCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\RefreshToken\RefreshTokenCommandValidator.cs">Features\Auth\Commands\RefreshToken\RefreshTokenCommandValidator.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\Register\RegisterCommand.cs">Features\Auth\Commands\Register\RegisterCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\Register\RegisterCommandHandler.cs">Features\Auth\Commands\Register\RegisterCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\Register\RegisterCommandValidator.cs">Features\Auth\Commands\Register\RegisterCommandValidator.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\ResetPassword\ResetPasswordCommand.cs">Features\Auth\Commands\ResetPassword\ResetPasswordCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\ResetPassword\ResetPasswordCommandHandler.cs">Features\Auth\Commands\ResetPassword\ResetPasswordCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\ResetPassword\ResetPasswordCommandValidator.cs">Features\Auth\Commands\ResetPassword\ResetPasswordCommandValidator.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\VerifyTwoFactor\VerifyTwoFactorCommand.cs">Features\Auth\Commands\VerifyTwoFactor\VerifyTwoFactorCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\VerifyTwoFactor\VerifyTwoFactorCommandHandler.cs">Features\Auth\Commands\VerifyTwoFactor\VerifyTwoFactorCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Commands\VerifyTwoFactor\VerifyTwoFactorCommandValidator.cs">Features\Auth\Commands\VerifyTwoFactor\VerifyTwoFactorCommandValidator.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Queries\Me\MeQuery.cs">Features\Auth\Queries\Me\MeQuery.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Auth\Queries\Me\MeQueryHandler.cs">Features\Auth\Queries\Me\MeQueryHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\FileStorage\Commands\DeleteFile\DeleteFileCommand.cs">Features\FileStorage\Commands\DeleteFile\DeleteFileCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\FileStorage\Commands\DeleteFile\DeleteFileCommandHandler.cs">Features\FileStorage\Commands\DeleteFile\DeleteFileCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\FileStorage\Commands\UploadFile\UploadFileCommand.cs">Features\FileStorage\Commands\UploadFile\UploadFileCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\FileStorage\Commands\UploadFile\UploadFileCommandHandler.cs">Features\FileStorage\Commands\UploadFile\UploadFileCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Notifications\Commands\MarkAllNotificationsAsRead\MarkAllNotificationsAsReadCommand.cs">Features\Notifications\Commands\MarkAllNotificationsAsRead\MarkAllNotificationsAsReadCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Notifications\Commands\MarkAllNotificationsAsRead\MarkAllNotificationsAsReadCommandHandler.cs">Features\Notifications\Commands\MarkAllNotificationsAsRead\MarkAllNotificationsAsReadCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Notifications\Commands\MarkNotificationAsRead\MarkNotificationAsReadCommand.cs">Features\Notifications\Commands\MarkNotificationAsRead\MarkNotificationAsReadCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Notifications\Commands\MarkNotificationAsRead\MarkNotificationAsReadCommandHandler.cs">Features\Notifications\Commands\MarkNotificationAsRead\MarkNotificationAsReadCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Notifications\Commands\SendNotification\SendNotificationCommand.cs">Features\Notifications\Commands\SendNotification\SendNotificationCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Notifications\Commands\SendNotification\SendNotificationCommandHandler.cs">Features\Notifications\Commands\SendNotification\SendNotificationCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Notifications\Queries\GetMyNotificationsPaged\GetMyNotificationsPagedQuery.cs">Features\Notifications\Queries\GetMyNotificationsPaged\GetMyNotificationsPagedQuery.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Roles\Commands\AssignPermissionToRole\AssignPermissionToRoleCommand.cs">Features\Roles\Commands\AssignPermissionToRole\AssignPermissionToRoleCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Roles\Commands\AssignPermissionToRole\AssignPermissionToRoleCommandHandler.cs">Features\Roles\Commands\AssignPermissionToRole\AssignPermissionToRoleCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Roles\Commands\CreateRole\CreateRoleCommand.cs">Features\Roles\Commands\CreateRole\CreateRoleCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Roles\Commands\CreateRole\CreateRoleCommandHandler.cs">Features\Roles\Commands\CreateRole\CreateRoleCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Roles\Commands\DeleteRole\DeleteRoleCommand.cs">Features\Roles\Commands\DeleteRole\DeleteRoleCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Roles\Commands\DeleteRole\DeleteRoleCommandHandler.cs">Features\Roles\Commands\DeleteRole\DeleteRoleCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Roles\Commands\UpdateRole\UpdateRoleCommand.cs">Features\Roles\Commands\UpdateRole\UpdateRoleCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Roles\Commands\UpdateRole\UpdateRoleCommandHandler.cs">Features\Roles\Commands\UpdateRole\UpdateRoleCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Roles\Queries\GetAllRolesPaged\GetAllRolesPagedQuery.cs">Features\Roles\Queries\GetAllRolesPaged\GetAllRolesPagedQuery.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\Roles\Queries\GetRoleById\GetRoleByIdQuery.cs">Features\Roles\Queries\GetRoleById\GetRoleByIdQuery.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\SoftRestore\Commands\RestoreDeletedEntity\RestoreDeletedEntityCommand.cs">Features\SoftRestore\Commands\RestoreDeletedEntity\RestoreDeletedEntityCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\SoftRestore\Commands\RestoreDeletedEntity\RestoreDeletedEntityCommandHandler.cs">Features\SoftRestore\Commands\RestoreDeletedEntity\RestoreDeletedEntityCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\SoftRestore\Queries\GetDeletedEntitiesPaged\GetDeletedEntitiesPagedQuery.cs">Features\SoftRestore\Queries\GetDeletedEntitiesPaged\GetDeletedEntitiesPagedQuery.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\UserManagement\Commands\AssignRoleToUser\AssignRoleToUserCommand.cs">Features\UserManagement\Commands\AssignRoleToUser\AssignRoleToUserCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\UserManagement\Commands\AssignRoleToUser\AssignRoleToUserCommandHandler.cs">Features\UserManagement\Commands\AssignRoleToUser\AssignRoleToUserCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\UserManagement\Commands\LogoutAllDevices\LogoutAllDevicesCommand.cs">Features\UserManagement\Commands\LogoutAllDevices\LogoutAllDevicesCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\UserManagement\Commands\LogoutAllDevices\LogoutAllDevicesCommandHandler.cs">Features\UserManagement\Commands\LogoutAllDevices\LogoutAllDevicesCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\UserManagement\Commands\RevokeRoleFromUser\RevokeRoleFromUserCommand.cs">Features\UserManagement\Commands\RevokeRoleFromUser\RevokeRoleFromUserCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\UserManagement\Commands\RevokeRoleFromUser\RevokeRoleFromUserCommandHandler.cs">Features\UserManagement\Commands\RevokeRoleFromUser\RevokeRoleFromUserCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\UserManagement\Commands\UnlockUser\UnlockUserCommand.cs">Features\UserManagement\Commands\UnlockUser\UnlockUserCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\UserManagement\Commands\UnlockUser\UnlockUserCommandHandler.cs">Features\UserManagement\Commands\UnlockUser\UnlockUserCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\UserManagement\Queries\GetAllUsersPaged\GetAllUsersPagedQuery.cs">Features\UserManagement\Queries\GetAllUsersPaged\GetAllUsersPagedQuery.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\UserProfile\Commands\Update\UpdateUserProfileCommand.cs">Features\UserProfile\Commands\Update\UpdateUserProfileCommand.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\UserProfile\Commands\Update\UpdateUserProfileCommandHandler.cs">Features\UserProfile\Commands\Update\UpdateUserProfileCommandHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\UserProfile\Commands\Update\UpdateUserProfileCommandValidator.cs">Features\UserProfile\Commands\Update\UpdateUserProfileCommandValidator.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\UserProfile\Queries\GetById\GetUserProfileByIdQuery.cs">Features\UserProfile\Queries\GetById\GetUserProfileByIdQuery.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Features\UserProfile\Queries\GetById\GetUserProfileByIdQueryHandler.cs">Features\UserProfile\Queries\GetById\GetUserProfileByIdQueryHandler.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Mappings\MappingProfile.cs">Mappings\MappingProfile.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Security\SecurityStampMiddleware.cs">Security\SecurityStampMiddleware.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Validators\StrongPasswordValidator.cs">Validators\StrongPasswordValidator.cs</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

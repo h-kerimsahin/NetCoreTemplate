@@ -1,0 +1,70 @@
+﻿<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>$safeprojectname.Infrastructure</Name>
+    <Description>Infrastructure Layer â€” EF Core, UoW, Hangfire, Serilog, Email, Storage</Description>
+    <ProjectType>CSharp</ProjectType>
+    <SortOrder>30</SortOrder>
+    <CreateNewFolder>false</CreateNewFolder>
+    <DefaultName>Infrastructure</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="$safeprojectname.Infrastructure.csproj" File="$safeprojectname.Infrastructure.csproj" ReplaceParameters="true">      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.Infrastructure.csproj">$safeprojectname$.Infrastructure.csproj</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DependencyInjection.cs">DependencyInjection.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Idempotency\IdempotencySettings.cs">Idempotency\IdempotencySettings.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Idempotency\MemoryIdempotencyService.cs">Idempotency\MemoryIdempotencyService.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Jobs\EmailSenderJob.cs">Jobs\EmailSenderJob.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Jobs\NightlyCleanupJob.cs">Jobs\NightlyCleanupJob.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Logging\SerilogConfigurator.cs">Logging\SerilogConfigurator.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\AppDbContext.cs">Persistence\AppDbContext.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\AppDbContextFactory.cs">Persistence\AppDbContextFactory.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\UnitOfWork.cs">Persistence\UnitOfWork.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Configurations\AppNotificationConfiguration.cs">Persistence\Configurations\AppNotificationConfiguration.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Configurations\AppPermissionConfiguration.cs">Persistence\Configurations\AppPermissionConfiguration.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Configurations\AppRoleConfiguration.cs">Persistence\Configurations\AppRoleConfiguration.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Configurations\AppRolePermissionConfiguration.cs">Persistence\Configurations\AppRolePermissionConfiguration.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Configurations\AppUserActivitedConfiguration.cs">Persistence\Configurations\AppUserActivitedConfiguration.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Configurations\AppUserConfiguration.cs">Persistence\Configurations\AppUserConfiguration.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Configurations\AppUserProfileConfiguration.cs">Persistence\Configurations\AppUserProfileConfiguration.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Configurations\AppUserRefreshTokenConfiguration.cs">Persistence\Configurations\AppUserRefreshTokenConfiguration.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Configurations\AppUserRoleConfiguration.cs">Persistence\Configurations\AppUserRoleConfiguration.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Configurations\AuditEntryConfiguration.cs">Persistence\Configurations\AuditEntryConfiguration.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Configurations\BackgroundJobLogConfiguration.cs">Persistence\Configurations\BackgroundJobLogConfiguration.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Configurations\SettingConfiguration.cs">Persistence\Configurations\SettingConfiguration.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Configurations\SystemLogConfiguration.cs">Persistence\Configurations\SystemLogConfiguration.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Migrations\20260930135542_InitialCreate.cs">Persistence\Migrations\20260930135542_InitialCreate.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Migrations\20260930135542_InitialCreate.Designer.cs">Persistence\Migrations\20260930135542_InitialCreate.Designer.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Migrations\20260930221022_V2_FullFeatures_AllEntities.cs">Persistence\Migrations\20260930221022_V2_FullFeatures_AllEntities.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Migrations\20260930221022_V2_FullFeatures_AllEntities.Designer.cs">Persistence\Migrations\20260930221022_V2_FullFeatures_AllEntities.Designer.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Migrations\AppDbContextModelSnapshot.cs">Persistence\Migrations\AppDbContextModelSnapshot.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Repositories\AppNotificationRepository.cs">Persistence\Repositories\AppNotificationRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Repositories\AppPermissionRepository.cs">Persistence\Repositories\AppPermissionRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Repositories\AppRolePermissionRepository.cs">Persistence\Repositories\AppRolePermissionRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Repositories\AppRoleRepository.cs">Persistence\Repositories\AppRoleRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Repositories\AppUserActivitedRepository.cs">Persistence\Repositories\AppUserActivitedRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Repositories\AppUserProfileRepository.cs">Persistence\Repositories\AppUserProfileRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Repositories\AppUserRefreshTokenRepository.cs">Persistence\Repositories\AppUserRefreshTokenRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Repositories\AppUserRepository.cs">Persistence\Repositories\AppUserRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Repositories\AppUserRoleRepository.cs">Persistence\Repositories\AppUserRoleRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Repositories\AuditEntryRepository.cs">Persistence\Repositories\AuditEntryRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Repositories\BackgroundJobLogRepository.cs">Persistence\Repositories\BackgroundJobLogRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Repositories\Repository.cs">Persistence\Repositories\Repository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Repositories\SettingRepository.cs">Persistence\Repositories\SettingRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\Repositories\SystemLogRepository.cs">Persistence\Repositories\SystemLogRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Persistence\SeedData\AppDbInitializer.cs">Persistence\SeedData\AppDbInitializer.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Security\EncryptionHelper.cs">Security\EncryptionHelper.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Security\HashHelper.cs">Security\HashHelper.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Security\JwtSettings.cs">Security\JwtSettings.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Security\JwtTokenService.cs">Security\JwtTokenService.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Security\PasswordHasher.cs">Security\PasswordHasher.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Security\TokenGenerator.cs">Security\TokenGenerator.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Security\UserActivityLogger.cs">Security\UserActivityLogger.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Services\AzureBlobStorageService.cs">Services\AzureBlobStorageService.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Services\DatabaseNotificationService.cs">Services\DatabaseNotificationService.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Services\EmailService.cs">Services\EmailService.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Services\EmailSettings.cs">Services\EmailSettings.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Services\FileStorageSettings.cs">Services\FileStorageSettings.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Services\LocalFileStorageService.cs">Services\LocalFileStorageService.cs</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

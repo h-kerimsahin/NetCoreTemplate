@@ -1,0 +1,28 @@
+﻿<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="ProjectGroup">
+  <TemplateData>
+    <Name>KrmShn Net Core Backend Project</Name>
+    <Description>Production Grade Clean Architecture .NET 11 Backend Template. Identity+RBAC, 2FA, JWT, CQRS (MediatR), Hangfire, SignalR, OData v4, OpenTelemetry, Rate Limiting, Idempotency, Soft-Delete + Audit, File Storage, 43+ Endpoints.</Description>
+    <ProjectType>CSharp</ProjectType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>KrmShnBackend</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <Icon>__TemplateIcon.ico</Icon>
+    <PreviewImage>__PreviewImage.png</PreviewImage>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectCollection>
+      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname.slnx">$safeprojectname.slnx</ProjectItem>
+      <SolutionFolder Name="Core">
+        <ProjectTemplateLink ProjectName="$safeprojectname.Domain" CopyParameters="true">Domain\Domain.vstemplate</ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="$safeprojectname.Application" CopyParameters="true">Application\Application.vstemplate</ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="$safeprojectname.Infrastructure" CopyParameters="true">Infrastructure\Infrastructure.vstemplate</ProjectTemplateLink>
+      </SolutionFolder>
+      <SolutionFolder Name="Presentation">
+        <ProjectTemplateLink ProjectName="$safeprojectname.Api" CopyParameters="true">Api\Api.vstemplate</ProjectTemplateLink>
+      </SolutionFolder>
+    </ProjectCollection>
+  </TemplateContent>
+</VSTemplate>

@@ -1,0 +1,61 @@
+﻿<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>$safeprojectname.Domain</Name>
+    <Description>Domain Layer â€” Entities, Enums, Interfaces</Description>
+    <ProjectType>CSharp</ProjectType>
+    <SortOrder>10</SortOrder>
+    <CreateNewFolder>false</CreateNewFolder>
+    <DefaultName>Domain</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="$safeprojectname.Domain.csproj" File="$safeprojectname.Domain.csproj" ReplaceParameters="true">      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.Domain.csproj">$safeprojectname$.Domain.csproj</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppNotification.cs">Entities\AppNotification.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppPermission.cs">Entities\AppPermission.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppRole.cs">Entities\AppRole.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppRolePermission.cs">Entities\AppRolePermission.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppUser.cs">Entities\AppUser.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppUserActivited.cs">Entities\AppUserActivited.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppUserProfile.cs">Entities\AppUserProfile.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppUserRefreshToken.cs">Entities\AppUserRefreshToken.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppUserRole.cs">Entities\AppUserRole.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AuditEntry.cs">Entities\AuditEntry.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\BackgroundJobLog.cs">Entities\BackgroundJobLog.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\Setting.cs">Entities\Setting.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\SystemLog.cs">Entities\SystemLog.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\Seedworks\BaseEntity.cs">Entities\Seedworks\BaseEntity.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Enums\EntityStatus.cs">Enums\EntityStatus.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Enums\JobStatus.cs">Enums\JobStatus.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Enums\NotificationType.cs">Enums\NotificationType.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Enums\PermissionGroup.cs">Enums\PermissionGroup.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Enums\RoleType.cs">Enums\RoleType.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Enums\SystemLogLevel.cs">Enums\SystemLogLevel.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Enums\TokenType.cs">Enums\TokenType.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Enums\TwoFactorType.cs">Enums\TwoFactorType.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Enums\UserActivityType.cs">Enums\UserActivityType.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\IAppDbContext.cs">Interfaces\IAppDbContext.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\IIdempotencyService.cs">Interfaces\IIdempotencyService.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\IUnitOfWork.cs">Interfaces\IUnitOfWork.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Repositories\IAppNotificationRepository.cs">Interfaces\Repositories\IAppNotificationRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Repositories\IAppPermissionRepository.cs">Interfaces\Repositories\IAppPermissionRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Repositories\IAppRolePermissionRepository.cs">Interfaces\Repositories\IAppRolePermissionRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Repositories\IAppRoleRepository.cs">Interfaces\Repositories\IAppRoleRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Repositories\IAppUserActivitedRepository.cs">Interfaces\Repositories\IAppUserActivitedRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Repositories\IAppUserProfileRepository.cs">Interfaces\Repositories\IAppUserProfileRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Repositories\IAppUserRefreshTokenRepository.cs">Interfaces\Repositories\IAppUserRefreshTokenRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Repositories\IAppUserRepository.cs">Interfaces\Repositories\IAppUserRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Repositories\IAppUserRoleRepository.cs">Interfaces\Repositories\IAppUserRoleRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Repositories\IAuditEntryRepository.cs">Interfaces\Repositories\IAuditEntryRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Repositories\IBackgroundJobLogRepository.cs">Interfaces\Repositories\IBackgroundJobLogRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Repositories\IRepository.cs">Interfaces\Repositories\IRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Repositories\ISettingRepository.cs">Interfaces\Repositories\ISettingRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Repositories\ISystemLogRepository.cs">Interfaces\Repositories\ISystemLogRepository.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Security\IPasswordHasher.cs">Interfaces\Security\IPasswordHasher.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Security\ITokenService.cs">Interfaces\Security\ITokenService.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Security\IUserActivityLogger.cs">Interfaces\Security\IUserActivityLogger.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Services\IEmailService.cs">Interfaces\Services\IEmailService.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Services\IFileStorageService.cs">Interfaces\Services\IFileStorageService.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Interfaces\Services\INotificationService.cs">Interfaces\Services\INotificationService.cs</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

@@ -1,0 +1,54 @@
+﻿<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>$safeprojectname.Api</Name>
+    <Description>Presentation Layer â€” Minimal API Endpoints, SignalR Hub, Swagger, Scalar UI</Description>
+    <ProjectType>CSharp</ProjectType>
+    <SortOrder>40</SortOrder>
+    <CreateNewFolder>false</CreateNewFolder>
+    <DefaultName>Api</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="$safeprojectname.Api.csproj" File="$safeprojectname.Api.csproj" ReplaceParameters="true">      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.Api.csproj">$safeprojectname$.Api.csproj</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.Api.http">$safeprojectname$.Api.http</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="appsettings.Development.json">appsettings.Development.json</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="appsettings.json">appsettings.json</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="appsettings.Production.json">appsettings.Production.json</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DependencyInjection.cs">DependencyInjection.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="HangfireAdminAuthorizationFilter.cs">HangfireAdminAuthorizationFilter.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Program.cs">Program.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="ApiVersioning\VersioningConfiguration.cs">ApiVersioning\VersioningConfiguration.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\UploadFileRequest.cs">DTOs\UploadFileRequest.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Endpoints\AuditEntriesEndpoints.cs">Endpoints\AuditEntriesEndpoints.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Endpoints\AuthEndpoints.cs">Endpoints\AuthEndpoints.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Endpoints\EndpointExtensions.cs">Endpoints\EndpointExtensions.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Endpoints\FileStorageEndpoints.cs">Endpoints\FileStorageEndpoints.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Endpoints\HealthEndpoints.cs">Endpoints\HealthEndpoints.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Endpoints\IEndpoint.cs">Endpoints\IEndpoint.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Endpoints\NotificationsEndpoints.cs">Endpoints\NotificationsEndpoints.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Endpoints\RolesEndpoints.cs">Endpoints\RolesEndpoints.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Endpoints\SoftRestoreEndpoints.cs">Endpoints\SoftRestoreEndpoints.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Endpoints\SystemLogsEndpoints.cs">Endpoints\SystemLogsEndpoints.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Endpoints\UserManagementEndpoints.cs">Endpoints\UserManagementEndpoints.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Endpoints\UserProfileEndpoints.cs">Endpoints\UserProfileEndpoints.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Endpoints\V2TestEndpoints.cs">Endpoints\V2TestEndpoints.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Health\DatabaseHealthCheck.cs">Health\DatabaseHealthCheck.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Health\FileStorageHealthCheck.cs">Health\FileStorageHealthCheck.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Health\HangfireHealthCheck.cs">Health\HangfireHealthCheck.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Health\SmtpHealthCheck.cs">Health\SmtpHealthCheck.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Hubs\NotificationHub.cs">Hubs\NotificationHub.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Idempotency\IdempotencyEndpointFilter.cs">Idempotency\IdempotencyEndpointFilter.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Middlewares\CorsSettings.cs">Middlewares\CorsSettings.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Middlewares\ExceptionHandlingMiddleware.cs">Middlewares\ExceptionHandlingMiddleware.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Middlewares\RateLimitingPolicy.cs">Middlewares\RateLimitingPolicy.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="OData\ODataModelBuilder.cs">OData\ODataModelBuilder.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="OpenTelemetry\OTelConfiguration.cs">OpenTelemetry\OTelConfiguration.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Properties\launchSettings.json">Properties\launchSettings.json</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="wwwroot\uploads\.gitkeep">wwwroot\uploads\.gitkeep</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="wwwroot\uploads\avatars\.gitkeep">wwwroot\uploads\avatars\.gitkeep</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="wwwroot\uploads\documents\.gitkeep">wwwroot\uploads\documents\.gitkeep</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="wwwroot\uploads\exports\.gitkeep">wwwroot\uploads\exports\.gitkeep</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="wwwroot\uploads\temp\.gitkeep">wwwroot\uploads\temp\.gitkeep</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>
