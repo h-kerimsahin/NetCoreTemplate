@@ -1,3 +1,11 @@
+<div align="right">
+
+[![Türkçe](https://img.shields.io/badge/Dil-Türkçe-red?style=for-the-badge)](README.md)
+[![English](https://img.shields.io/badge/Language-English-blue?style=for-the-badge)](README.en.md)
+[![Português (BR)](https://img.shields.io/badge/Idioma-Português%20(BR)-green?style=for-the-badge)](README.pt-BR.md)
+
+</div>
+
 # 🏗️ NetCoreTemplate — Production Grade .NET 11 Clean Architecture API
 
 > **Production hazır**, çok katmanlı, güvenlik odaklı modern ASP.NET Core Web API template'i.\
@@ -9,10 +17,10 @@
 
 > Tek tıkla Visual Studio'ya kur ve her yeni projede sıfırdan kurulum yapma!
 
-[![Latest Release](https://img.shields.io/github/v/release/h-kerimsahin/NetCoreTemplate?display_name=tag&sort=semver&label=Release&style=for-the-badge&logo=github)](../../releases/latest)
-[![Release Workflow Status](.github/workflows/publish-template-release.yml/badge.svg)](../../actions/workflows/publish-template-release.yml)
+[![Latest Release](https://img.shields.io/github/v/release/h-kerimsahin/NetCoreTemplate?display_name=tag&sort=semver&label=Release&style=for-the-badge&logo=github)](https://github.com/h-kerimsahin/NetCoreTemplate/releases/latest)
+[![Release Workflow Status](https://github.com/h-kerimsahin/NetCoreTemplate/actions/workflows/publish-template-release.yml/badge.svg)](https://github.com/h-kerimsahin/NetCoreTemplate/actions/workflows/publish-template-release.yml)
 
-**Adres:** [**Releases → Template ZIP**](../../releases/latest)
+**Adres:** [**Releases → Template ZIP**](https://github.com/h-kerimsahin/NetCoreTemplate/releases/latest)
 
 | # | Adım |
 |---|------|
