@@ -7,7 +7,7 @@ param(
     [Parameter(Mandatory=$true)]
     [string]$Version,
     [switch]$PreRelease,
-    [string]$Branch = "main"
+    [string]$Branch = "master"
 )
 
 $ErrorActionPreference = "Stop"

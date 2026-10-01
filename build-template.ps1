@@ -30,22 +30,23 @@ function Copy-TemplateFolder {
 
     $DirExcludes    = @("bin","obj","node_modules","packages",".vs",".git",".trae")
     $ExtExcludes    = @("*.user","*.suo","*.cache","*.log","*.db","*.mdf","*.ldf","*.pdb","*.dll","*.exe","*.deps.json","*.runtimeconfig.json","*.staticwebassets.*")
-    $PathExcludes   = @("Migrations\*Designer.cs","Migrations\*ModelSnapshot.cs","*bin\*","*obj\*")
     $AllExtExcludes = $ExtExcludes + $ExtraExclude
 
     Get-ChildItem -Path $Source -Recurse -File | ForEach-Object {
         $rel     = $_.FullName.Substring($Source.Length + 1)
-        $relWin  = $rel -replace "/","\"
-        $segments= $relWin -split "\\"
+        # Normalize to forward-slash for cross-platform path comparison
+        $relNorm = $rel -replace "\\", "/"
+        $segments= $relNorm -split "/"
 
         # Directory segment exclude (bin, obj, .trae, etc.)
         foreach ($d in $DirExcludes) { if ($segments -contains $d) { return } }
 
         # Extension/wildcard exclude
-        foreach ($ex in $AllExtExcludes) { if ($relWin -like $ex) { return } }
+        foreach ($ex in $AllExtExcludes) { if ($relNorm -like $ex) { return } }
 
-        # Path pattern exclude
-        foreach ($ex in $PathExcludes)   { if ($relWin -like $ex) { return } }
+        # Path pattern exclude (both slash variants)
+        if ($relNorm -like "Migrations/*Designer.cs") { return }
+        if ($relNorm -like "Migrations/*ModelSnapshot.cs") { return }
 
         # Rename files that contain "NetCoreTemplate" -> "$safeprojectname$"
         $newRel = $rel -replace "NetCoreTemplate", "`$safeprojectname`$"

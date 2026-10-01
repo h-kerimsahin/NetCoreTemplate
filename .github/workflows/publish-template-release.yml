@@ -21,7 +21,7 @@ permissions:
 jobs:
   build-and-release:
     name: Build Template + Upload to Release
-    runs-on: ubuntu-latest
+    runs-on: windows-2022
 
     steps:
       - name: Checkout repository
@@ -33,13 +33,12 @@ jobs:
         run: |
           $ver = if ('${{ github.event.inputs.version }}') { '${{ github.event.inputs.version }}' } `
                  else { $env:GITHUB_REF_NAME -replace '^v', '' }
-          echo "version=$ver" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "version=$ver" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           Write-Host "Using version: $ver"
 
-      - name: Build template ZIP (PowerShell)
+      - name: Build template ZIP
         shell: pwsh
         run: |
-          Set-ExecutionPolicy Bypass -Scope Process -Force
           ./build-template.ps1
 
       - name: Verify artifact exists
@@ -52,34 +51,34 @@ jobs:
           $size = (Get-Item ./KrmShnNetCoreBackendProject.zip).Length / 1KB
           Write-Host ("Template ZIP size: {0:N1} KB" -f $size)
 
-      - name: Generate release notes (changelog style)
-        id: notes
+      - name: Generate release notes
         shell: pwsh
         run: |
           $body = @"
           ## 🚀 KrmShn Net Core Backend Project - v${{ steps.version.outputs.version }}
 
-          Production Grade **Clean Architecture** .NET 11 Backend Template'i Visual Studio'da tek tıkla kullanmak için hazır.
+          Production Grade **Clean Architecture** .NET 11 Backend Template Visual Studio'da tek tıkla kullanmak için hazır.
 
           ### 📦 Indirilecekler
 
           | Dosya | Aciklama |
           |-------|----------|
           | **KrmShnNetCoreBackendProject.zip** | Visual Studio Project Template (ana paket) |
+          | **install-template.bat** (ZIP icinde) | Tek tikla VS template kurulum scripti |
 
           ### 🔧 Kurulum (2 yontem)
 
-          #### Yontem 1 - Visual Studio Template Kur
-          1. ZIP dosyasını indirin
-          2. Aşağıdaki klasöre kopyalayın (VS 2022):
+          #### Yontem 1 - Manuel Kopyala
+          1. ZIP dosyasini indirin
+          2. Asagidaki klasore kopyalayin (VS 2022):
              ```
              %USERPROFILE%\Documents\Visual Studio 2022\Templates\ProjectTemplates\
              ```
-          3. Visual Studio'yu yeniden başlatın
-          4. *Create a new project* > arama: **KrmShn** > **KrmShn Net Core Backend Project** seç
+          3. Visual Studio'yu YENIDEN BASLATIN
+          4. Create a new project > arama: **KrmShn** > **KrmShn Net Core Backend Project** sec
 
-          #### Yontem 2 - install-template.bat
-          ZIP i cikartin, icindeki `install-template.bat` dosyasini cift tiklayin.
+          #### Yontem 2 - Otomatik Kurulum Scripti
+          ZIP'i cikartin, icindeki `install-template.bat` dosyasini CIFT TIKLAYIN.
 
           ### 🛠️ Projeyi ilk calistirma
           ```bash
@@ -88,19 +87,23 @@ jobs:
           dotnet ef database update
           dotnet run
           ```
-          > Swagger:  http://localhost:5084/swagger \
-          > Default SuperAdmin (SADECE Development): `superadmin@netcoretemplate.com` / `Qwerty123!`
+          > Swagger:  http://localhost:5084/swagger
+          > Default SuperAdmin (SADECE Development):
+          >  E-posta: `superadmin@netcoretemplate.com`  |  Sifre: `Qwerty123!`
 
           ### ✨ Template icindeki ozellikler
           - Clean Architecture 4 katman (Domain / Application / Infrastructure / Api)
-          - JWT + 2FA + RBAC (Role + Permission) + SecurityStamp middleware
-          - 3 Katmanli Rate Limit, Idempotency Filter, CORS Secure-by-Default
-          - Hangfire, SignalR Notification Hub, OData v4
-          - OpenTelemetry + Prometheus, Serilog Structured Logging
-          - Soft-Delete + Audit Entries + Restore, File Storage (Local/Azure Blob)
-          - 43+ Endpoint + Swagger + Scalar UI
+          - JWT (15dk Access + 14g Refresh) + 2FA + RBAC (Role + Permission)
+          - SecurityStamp middleware, 3 katmanli Rate Limit, Idempotency Filter
+          - CORS Secure-by-Default, Upload Path Traversal Korumasi
+          - Hangfire Dashboard + Recurring Jobs, SignalR Notification Hub
+          - OData v4 ($filter, $select, $orderby, $expand)
+          - OpenTelemetry + Prometheus /metrics, Serilog Structured Logging
+          - Soft-Delete + Audit Entries + Geri yukleme (Restore)
+          - File Storage (Local / Azure Blob), Email Service (SMTP)
+          - 43+ Endpoint + Swagger UI + Scalar UI (Modern)
 
-          **Published otomatik olarak GitHub Actions uzerinden** 🔧
+          Yayin: GitHub Actions ile otomatik olusturuldu 🔧
           "@
           Set-Content -Path ./RELEASE_NOTES.md -Value $body -Encoding utf8
 
@@ -113,3 +116,4 @@ jobs:
           prerelease: ${{ github.event.inputs.prerelease == 'true' }}
           files: |
             ./KrmShnNetCoreBackendProject.zip
+            ./install-template.bat
