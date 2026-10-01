@@ -1,6 +1,6 @@
 ﻿<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
   <TemplateData>
-    <Name>$safeprojectname.Api</Name>
+    <Name>$safeprojectname$.Api</Name>
     <Description>Presentation Layer â€” Minimal API Endpoints, SignalR Hub, Swagger, Scalar UI</Description>
     <ProjectType>CSharp</ProjectType>
     <SortOrder>40</SortOrder>
@@ -9,8 +9,7 @@
     <ProvideDefaultName>true</ProvideDefaultName>
   </TemplateData>
   <TemplateContent>
-    <Project TargetFileName="$safeprojectname.Api.csproj" File="$safeprojectname.Api.csproj" ReplaceParameters="true">      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.Api.csproj">$safeprojectname$.Api.csproj</ProjectItem>
-      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.Api.http">$safeprojectname$.Api.http</ProjectItem>
+    <Project TargetFileName="$safeprojectname$.Api.csproj" File="$safeprojectname$.Api.csproj" ReplaceParameters="true">      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.Api.http">$safeprojectname$.Api.http</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="appsettings.Development.json">appsettings.Development.json</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="appsettings.json">appsettings.json</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="appsettings.Production.json">appsettings.Production.json</ProjectItem>

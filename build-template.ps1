@@ -103,7 +103,7 @@ $projFiles = Get-ChildItem -Path (Join-Path $OutDir "Domain") -Recurse -File |
 $domainVst = @"
 <VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
   <TemplateData>
-    <Name>`$safeprojectname`.Domain</Name>
+    <Name>`$safeprojectname`$.Domain</Name>
     <Description>Domain Layer — Entities, Enums, Interfaces</Description>
     <ProjectType>CSharp</ProjectType>
     <SortOrder>10</SortOrder>
@@ -112,13 +112,12 @@ $domainVst = @"
     <ProvideDefaultName>true</ProvideDefaultName>
   </TemplateData>
   <TemplateContent>
-    <Project TargetFileName="`$safeprojectname`.Domain.csproj" File="`$safeprojectname`.Domain.csproj" ReplaceParameters="true">
+    <Project TargetFileName="`$safeprojectname`$.Domain.csproj" File="`$safeprojectname`$.Domain.csproj" ReplaceParameters="true">
 "@
 $projFiles | ForEach-Object {
     $rel = $_.Substring((Join-Path $OutDir "Domain").Length + 1)
-    if ($rel -notlike "*.vstemplate") {
-        $target = $rel -replace "`$safeprojectname`$", "`$safeprojectname`$"
-        $domainVst += "      <ProjectItem ReplaceParameters=`"true`" TargetFileName=`"$target`">$rel</ProjectItem>`r`n"
+    if ($rel -notlike "*.vstemplate" -and $rel -notlike "*.csproj") {
+        $domainVst += "      <ProjectItem ReplaceParameters=`"true`" TargetFileName=`"$rel`">$rel</ProjectItem>`r`n"
     }
 }
 $domainVst += @"
@@ -135,7 +134,7 @@ $projFiles = Get-ChildItem -Path (Join-Path $OutDir "Application") -Recurse -Fil
 $appVst = @"
 <VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
   <TemplateData>
-    <Name>`$safeprojectname`.Application</Name>
+    <Name>`$safeprojectname`$.Application</Name>
     <Description>Application Layer — DTOs, CQRS, Validators, Mappings</Description>
     <ProjectType>CSharp</ProjectType>
     <SortOrder>20</SortOrder>
@@ -144,11 +143,11 @@ $appVst = @"
     <ProvideDefaultName>true</ProvideDefaultName>
   </TemplateData>
   <TemplateContent>
-    <Project TargetFileName="`$safeprojectname`.Application.csproj" File="`$safeprojectname`.Application.csproj" ReplaceParameters="true">
+    <Project TargetFileName="`$safeprojectname`$.Application.csproj" File="`$safeprojectname`$.Application.csproj" ReplaceParameters="true">
 "@
 $projFiles | ForEach-Object {
     $rel = $_.Substring((Join-Path $OutDir "Application").Length + 1)
-    if ($rel -notlike "*.vstemplate") {
+    if ($rel -notlike "*.vstemplate" -and $rel -notlike "*.csproj") {
         $appVst += "      <ProjectItem ReplaceParameters=`"true`" TargetFileName=`"$rel`">$rel</ProjectItem>`r`n"
     }
 }
@@ -166,7 +165,7 @@ $projFiles = Get-ChildItem -Path (Join-Path $OutDir "Infrastructure") -Recurse -
 $infVst = @"
 <VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
   <TemplateData>
-    <Name>`$safeprojectname`.Infrastructure</Name>
+    <Name>`$safeprojectname`$.Infrastructure</Name>
     <Description>Infrastructure Layer — EF Core, UoW, Hangfire, Serilog, Email, Storage</Description>
     <ProjectType>CSharp</ProjectType>
     <SortOrder>30</SortOrder>
@@ -175,11 +174,11 @@ $infVst = @"
     <ProvideDefaultName>true</ProvideDefaultName>
   </TemplateData>
   <TemplateContent>
-    <Project TargetFileName="`$safeprojectname`.Infrastructure.csproj" File="`$safeprojectname`.Infrastructure.csproj" ReplaceParameters="true">
+    <Project TargetFileName="`$safeprojectname`$.Infrastructure.csproj" File="`$safeprojectname`$.Infrastructure.csproj" ReplaceParameters="true">
 "@
 $projFiles | ForEach-Object {
     $rel = $_.Substring((Join-Path $OutDir "Infrastructure").Length + 1)
-    if ($rel -notlike "*.vstemplate") {
+    if ($rel -notlike "*.vstemplate" -and $rel -notlike "*.csproj") {
         $infVst += "      <ProjectItem ReplaceParameters=`"true`" TargetFileName=`"$rel`">$rel</ProjectItem>`r`n"
     }
 }
@@ -197,7 +196,7 @@ $projFiles = Get-ChildItem -Path (Join-Path $OutDir "Api") -Recurse -File |
 $apiVst = @"
 <VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
   <TemplateData>
-    <Name>`$safeprojectname`.Api</Name>
+    <Name>`$safeprojectname`$.Api</Name>
     <Description>Presentation Layer — Minimal API Endpoints, SignalR Hub, Swagger, Scalar UI</Description>
     <ProjectType>CSharp</ProjectType>
     <SortOrder>40</SortOrder>
@@ -206,11 +205,11 @@ $apiVst = @"
     <ProvideDefaultName>true</ProvideDefaultName>
   </TemplateData>
   <TemplateContent>
-    <Project TargetFileName="`$safeprojectname`.Api.csproj" File="`$safeprojectname`.Api.csproj" ReplaceParameters="true">
+    <Project TargetFileName="`$safeprojectname`$.Api.csproj" File="`$safeprojectname`$.Api.csproj" ReplaceParameters="true">
 "@
 $projFiles | ForEach-Object {
     $rel = $_.Substring((Join-Path $OutDir "Api").Length + 1)
-    if ($rel -notlike "*.vstemplate") {
+    if ($rel -notlike "*.vstemplate" -and $rel -notlike "*.csproj") {
         $apiVst += "      <ProjectItem ReplaceParameters=`"true`" TargetFileName=`"$rel`">$rel</ProjectItem>`r`n"
     }
 }
@@ -229,16 +228,16 @@ Write-Host "Generating solution (.slnx) file..."
 $slnx = @"
 <Solution>
   <Folder Name="/Core/">
-    <Project Path="Core/`$safeprojectname`.Domain/`$safeprojectname`.Domain.csproj" />
-    <Project Path="Core/`$safeprojectname`.Application/`$safeprojectname`.Application.csproj" />
-    <Project Path="Core/`$safeprojectname`.Infrastructure/`$safeprojectname`.Infrastructure.csproj" />
+    <Project Path="Core/`$safeprojectname`$.Domain/`$safeprojectname`$.Domain.csproj" />
+    <Project Path="Core/`$safeprojectname`$.Application/`$safeprojectname`$.Application.csproj" />
+    <Project Path="Core/`$safeprojectname`$.Infrastructure/`$safeprojectname`$.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Presentation/">
-    <Project Path="Presentation/`$safeprojectname`.Api/`$safeprojectname`.Api.csproj" />
+    <Project Path="Presentation/`$safeprojectname`$.Api/`$safeprojectname`$.Api.csproj" />
   </Folder>
 </Solution>
 "@
-[System.IO.File]::WriteAllText((Join-Path $OutDir "`$safeprojectname`.slnx"), $slnx, [System.Text.Encoding]::UTF8)
+[System.IO.File]::WriteAllText((Join-Path $OutDir "`$safeprojectname`$.slnx"), $slnx, [System.Text.Encoding]::UTF8)
 
 # Create root multi-project .vstemplate
 Write-Host "Writing root multi-project .vstemplate"
@@ -259,14 +258,14 @@ $rootVst = @"
   </TemplateData>
   <TemplateContent>
     <ProjectCollection>
-      <ProjectItem ReplaceParameters="true" TargetFileName="`$safeprojectname`.slnx">`$safeprojectname`.slnx</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="`$safeprojectname`$.slnx">`$safeprojectname`$.slnx</ProjectItem>
       <SolutionFolder Name="Core">
-        <ProjectTemplateLink ProjectName="`$safeprojectname`.Domain" CopyParameters="true">Domain\Domain.vstemplate</ProjectTemplateLink>
-        <ProjectTemplateLink ProjectName="`$safeprojectname`.Application" CopyParameters="true">Application\Application.vstemplate</ProjectTemplateLink>
-        <ProjectTemplateLink ProjectName="`$safeprojectname`.Infrastructure" CopyParameters="true">Infrastructure\Infrastructure.vstemplate</ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="`$safeprojectname`$.Domain" CopyParameters="true">Domain\Domain.vstemplate</ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="`$safeprojectname`$.Application" CopyParameters="true">Application\Application.vstemplate</ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="`$safeprojectname`$.Infrastructure" CopyParameters="true">Infrastructure\Infrastructure.vstemplate</ProjectTemplateLink>
       </SolutionFolder>
       <SolutionFolder Name="Presentation">
-        <ProjectTemplateLink ProjectName="`$safeprojectname`.Api" CopyParameters="true">Api\Api.vstemplate</ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="`$safeprojectname`$.Api" CopyParameters="true">Api\Api.vstemplate</ProjectTemplateLink>
       </SolutionFolder>
     </ProjectCollection>
   </TemplateContent>

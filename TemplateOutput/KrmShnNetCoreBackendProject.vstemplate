@@ -14,14 +14,14 @@
   </TemplateData>
   <TemplateContent>
     <ProjectCollection>
-      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname.slnx">$safeprojectname.slnx</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.slnx">$safeprojectname$.slnx</ProjectItem>
       <SolutionFolder Name="Core">
-        <ProjectTemplateLink ProjectName="$safeprojectname.Domain" CopyParameters="true">Domain\Domain.vstemplate</ProjectTemplateLink>
-        <ProjectTemplateLink ProjectName="$safeprojectname.Application" CopyParameters="true">Application\Application.vstemplate</ProjectTemplateLink>
-        <ProjectTemplateLink ProjectName="$safeprojectname.Infrastructure" CopyParameters="true">Infrastructure\Infrastructure.vstemplate</ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="$safeprojectname$.Domain" CopyParameters="true">Domain\Domain.vstemplate</ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="$safeprojectname$.Application" CopyParameters="true">Application\Application.vstemplate</ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="$safeprojectname$.Infrastructure" CopyParameters="true">Infrastructure\Infrastructure.vstemplate</ProjectTemplateLink>
       </SolutionFolder>
       <SolutionFolder Name="Presentation">
-        <ProjectTemplateLink ProjectName="$safeprojectname.Api" CopyParameters="true">Api\Api.vstemplate</ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="$safeprojectname$.Api" CopyParameters="true">Api\Api.vstemplate</ProjectTemplateLink>
       </SolutionFolder>
     </ProjectCollection>
   </TemplateContent>

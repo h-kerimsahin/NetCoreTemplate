@@ -1,6 +1,6 @@
 ﻿<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
   <TemplateData>
-    <Name>$safeprojectname.Infrastructure</Name>
+    <Name>$safeprojectname$.Infrastructure</Name>
     <Description>Infrastructure Layer â€” EF Core, UoW, Hangfire, Serilog, Email, Storage</Description>
     <ProjectType>CSharp</ProjectType>
     <SortOrder>30</SortOrder>
@@ -9,8 +9,7 @@
     <ProvideDefaultName>true</ProvideDefaultName>
   </TemplateData>
   <TemplateContent>
-    <Project TargetFileName="$safeprojectname.Infrastructure.csproj" File="$safeprojectname.Infrastructure.csproj" ReplaceParameters="true">      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.Infrastructure.csproj">$safeprojectname$.Infrastructure.csproj</ProjectItem>
-      <ProjectItem ReplaceParameters="true" TargetFileName="DependencyInjection.cs">DependencyInjection.cs</ProjectItem>
+    <Project TargetFileName="$safeprojectname$.Infrastructure.csproj" File="$safeprojectname$.Infrastructure.csproj" ReplaceParameters="true">      <ProjectItem ReplaceParameters="true" TargetFileName="DependencyInjection.cs">DependencyInjection.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Idempotency\IdempotencySettings.cs">Idempotency\IdempotencySettings.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Idempotency\MemoryIdempotencyService.cs">Idempotency\MemoryIdempotencyService.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Jobs\EmailSenderJob.cs">Jobs\EmailSenderJob.cs</ProjectItem>

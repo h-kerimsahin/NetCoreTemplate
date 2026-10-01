@@ -1,6 +1,6 @@
 ﻿<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
   <TemplateData>
-    <Name>$safeprojectname.Domain</Name>
+    <Name>$safeprojectname$.Domain</Name>
     <Description>Domain Layer â€” Entities, Enums, Interfaces</Description>
     <ProjectType>CSharp</ProjectType>
     <SortOrder>10</SortOrder>
@@ -9,8 +9,7 @@
     <ProvideDefaultName>true</ProvideDefaultName>
   </TemplateData>
   <TemplateContent>
-    <Project TargetFileName="$safeprojectname.Domain.csproj" File="$safeprojectname.Domain.csproj" ReplaceParameters="true">      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.Domain.csproj">$safeprojectname$.Domain.csproj</ProjectItem>
-      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppNotification.cs">Entities\AppNotification.cs</ProjectItem>
+    <Project TargetFileName="$safeprojectname$.Domain.csproj" File="$safeprojectname$.Domain.csproj" ReplaceParameters="true">      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppNotification.cs">Entities\AppNotification.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppPermission.cs">Entities\AppPermission.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppRole.cs">Entities\AppRole.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppRolePermission.cs">Entities\AppRolePermission.cs</ProjectItem>
