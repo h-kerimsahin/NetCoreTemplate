@@ -9,7 +9,8 @@
     <ProvideDefaultName>true</ProvideDefaultName>
   </TemplateData>
   <TemplateContent>
-    <Project TargetFileName="$safeprojectname$.Application.csproj" File="$safeprojectname$.Application.csproj" ReplaceParameters="true">      <ProjectItem ReplaceParameters="true" TargetFileName="DependencyInjection.cs">DependencyInjection.cs</ProjectItem>
+    <Project TargetFileName="$safeprojectname$.Application.csproj" File="$safeprojectname$.Application.csproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="DependencyInjection.cs">DependencyInjection.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Behaviors\LoggingBehavior.cs">Behaviors\LoggingBehavior.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Behaviors\ValidationBehavior.cs">Behaviors\ValidationBehavior.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="DTOs\Auth\EnableTwoFactorRequestDto.cs">DTOs\Auth\EnableTwoFactorRequestDto.cs</ProjectItem>

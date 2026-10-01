@@ -688,3 +688,7 @@ ai-*.json
 #  - Production: Azure Key Vault, AWS Secrets Manager,
 #                Docker Secrets, veya Environment Variables kullanın.
 /RELEASE_NOTES_v1.0.0.md
+
+# VS Template Wizard Build Outputs
+TemplateWizards/bin/
+TemplateWizards/obj/

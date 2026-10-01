@@ -9,7 +9,8 @@
     <ProvideDefaultName>true</ProvideDefaultName>
   </TemplateData>
   <TemplateContent>
-    <Project TargetFileName="$safeprojectname$.Domain.csproj" File="$safeprojectname$.Domain.csproj" ReplaceParameters="true">      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppNotification.cs">Entities\AppNotification.cs</ProjectItem>
+    <Project TargetFileName="$safeprojectname$.Domain.csproj" File="$safeprojectname$.Domain.csproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppNotification.cs">Entities\AppNotification.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppPermission.cs">Entities\AppPermission.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppRole.cs">Entities\AppRole.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Entities\AppRolePermission.cs">Entities\AppRolePermission.cs</ProjectItem>
