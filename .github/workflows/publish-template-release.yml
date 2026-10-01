@@ -1,0 +1,115 @@
+name: Publish KrmShn Template Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (e.g. 1.0.0)"
+        required: true
+        default: "1.0.0"
+      prerelease:
+        description: "Is this a pre-release?"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build Template + Upload to Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Determine version
+        id: version
+        shell: pwsh
+        run: |
+          $ver = if ('${{ github.event.inputs.version }}') { '${{ github.event.inputs.version }}' } `
+                 else { $env:GITHUB_REF_NAME -replace '^v', '' }
+          echo "version=$ver" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          Write-Host "Using version: $ver"
+
+      - name: Build template ZIP (PowerShell)
+        shell: pwsh
+        run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force
+          ./build-template.ps1
+
+      - name: Verify artifact exists
+        shell: pwsh
+        run: |
+          if (-not (Test-Path ./KrmShnNetCoreBackendProject.zip)) {
+            Write-Error "Template ZIP not found!"
+            exit 1
+          }
+          $size = (Get-Item ./KrmShnNetCoreBackendProject.zip).Length / 1KB
+          Write-Host ("Template ZIP size: {0:N1} KB" -f $size)
+
+      - name: Generate release notes (changelog style)
+        id: notes
+        shell: pwsh
+        run: |
+          $body = @"
+          ## 🚀 KrmShn Net Core Backend Project - v${{ steps.version.outputs.version }}
+
+          Production Grade **Clean Architecture** .NET 11 Backend Template'i Visual Studio'da tek tıkla kullanmak için hazır.
+
+          ### 📦 Indirilecekler
+
+          | Dosya | Aciklama |
+          |-------|----------|
+          | **KrmShnNetCoreBackendProject.zip** | Visual Studio Project Template (ana paket) |
+
+          ### 🔧 Kurulum (2 yontem)
+
+          #### Yontem 1 - Visual Studio Template Kur
+          1. ZIP dosyasını indirin
+          2. Aşağıdaki klasöre kopyalayın (VS 2022):
+             ```
+             %USERPROFILE%\Documents\Visual Studio 2022\Templates\ProjectTemplates\
+             ```
+          3. Visual Studio'yu yeniden başlatın
+          4. *Create a new project* > arama: **KrmShn** > **KrmShn Net Core Backend Project** seç
+
+          #### Yontem 2 - install-template.bat
+          ZIP i cikartin, icindeki `install-template.bat` dosyasini cift tiklayin.
+
+          ### 🛠️ Projeyi ilk calistirma
+          ```bash
+          dotnet restore
+          cd Presentation/<ProjeAdi>.Api
+          dotnet ef database update
+          dotnet run
+          ```
+          > Swagger:  http://localhost:5084/swagger \
+          > Default SuperAdmin (SADECE Development): `superadmin@netcoretemplate.com` / `Qwerty123!`
+
+          ### ✨ Template icindeki ozellikler
+          - Clean Architecture 4 katman (Domain / Application / Infrastructure / Api)
+          - JWT + 2FA + RBAC (Role + Permission) + SecurityStamp middleware
+          - 3 Katmanli Rate Limit, Idempotency Filter, CORS Secure-by-Default
+          - Hangfire, SignalR Notification Hub, OData v4
+          - OpenTelemetry + Prometheus, Serilog Structured Logging
+          - Soft-Delete + Audit Entries + Restore, File Storage (Local/Azure Blob)
+          - 43+ Endpoint + Swagger + Scalar UI
+
+          **Published otomatik olarak GitHub Actions uzerinden** 🔧
+          "@
+          Set-Content -Path ./RELEASE_NOTES.md -Value $body -Encoding utf8
+
+      - name: Create GitHub Release + Upload Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          name: KrmShn Template v${{ steps.version.outputs.version }}
+          tag_name: v${{ steps.version.outputs.version }}
+          body_path: ./RELEASE_NOTES.md
+          prerelease: ${{ github.event.inputs.prerelease == 'true' }}
+          files: |
+            ./KrmShnNetCoreBackendProject.zip
