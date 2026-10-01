@@ -561,6 +561,122 @@ crashreport/
 *.rej
 
 # ==================================================
+# ============ YAPAY ZEKA / AI ARAÇLARI =============
+# ===== AI Tarafından Üretilen Dosyalar Ignore ======
+# ==================================================
+
+# ------------------------------
+# 1. TRAE AI (Bu proje AI'sı)
+# ------------------------------
+.trae/
+trae/
+
+# ------------------------------
+# 2. GENEL AI KURALLARI / PROMPT DOSYALARI
+# ------------------------------
+AI_RULES*.md
+*AI_RULES*.md
+ai_rules*.md
+ai-*.md
+AI_*.md
+
+# ------------------------------
+# 3. POPÜLER AI EDITOR / CODING ARACLARI
+# ------------------------------
+# Cursor IDE (Formerly Anysphere)
+.cursor/
+.cursorrules
+.cursorignore
+.cursorrc
+.cursortheme
+*cursor*.md
+
+# Windsurf / Codeium
+.windsurf/
+.windsurfrules
+.codeium/
+
+# GitHub Copilot
+.github/copilot*
+.copilotignore
+
+# Continue.dev (Open Source AI coding)
+.continue/
+.continuerc.json
+.continuerc.ts
+
+# Cline / Roo Code / Claude Dev
+.cline/
+.roo/
+.clauderc*
+.claude*settings*
+.coderabbit*
+
+# Devine / CodeLlama / Local AI
+.devine/
+.ollama/
+.lmstudio/
+.tabnine/
+.kite/
+
+# Sourcegraph Cody
+.sourcegraph/
+.cody/
+
+# Pieces.app
+.pieces/
+
+# ------------------------------
+# 4. AI CONTEXT / HAFIZA DOSYALARI
+# ------------------------------
+.ai/
+ai/
+.assistant/
+.agents/
+.memory/
+.prompts/
+!prompts/README.md
+!sample-prompts/
+
+# AI generated logs/sessions
+ai-*.log
+ai-*.json
+*.ai-session
+.conversation-history/
+.chat-history/
+.chat/
+
+# ------------------------------
+# 5. AI OLUŞTURMA (Generate) ÇIKTILARI
+# ------------------------------
+# AI ile oluşturulan geçici dosyalar
+*.generated.*
+*_ai.*
+*_gpt.*
+*_claude.*
+*_gemini.*
+
+# Lokal AI embedding index / vector store
+.vector/
+.embeddings/
+.chromadb/
+.weaviate/
+
+# ------------------------------
+# 6. DİĞER LOCAL GELİŞTİRME EKLERİ (Tamamlayıcı)
+# ------------------------------
+# Local Workspace State
+.obsidian/
+.notion/
+.dendron/
+
+# Local Scripting / Temp (user-only)
+*.local.csx
+*.local.ps1
+*.local.sh
+*.local.bat
+
+# ==================================================
 # ============ GÜVENLİK UYARI (İNSAN OKUR) ==========
 # ==================================================
 # Yapılandırma hatası riskine karşı:
