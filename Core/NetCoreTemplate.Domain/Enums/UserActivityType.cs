@@ -19,5 +19,14 @@ public enum UserActivityType
     [Display(Name = "Entity Oluşturuldu")] EntityCreated = 13,
     [Display(Name = "Entity Güncellendi")] EntityUpdated = 14,
     [Display(Name = "Entity Silindi")] EntityDeleted = 15,
-    [Display(Name = "Hesap Kilitlendi")] AccountLocked = 16
+    [Display(Name = "Hesap Kilitlendi")] AccountLocked = 16,
+    [Display(Name = "Güvenlik Damgası Değişti")] SecurityStampChanged = 17,
+    [Display(Name = "Rol Atandı")] RoleAssigned = 18,
+    [Display(Name = "Rol Geri Alındı")] RoleRevoked = 19,
+    [Display(Name = "İzin Verildi")] PermissionGranted = 20,
+    [Display(Name = "Entity Geri Yüklendi")] EntityRestored = 21,
+    [Display(Name = "Kullanıcı Şifre Değiştirdi")] UserPasswordChanged = 22,
+    [Display(Name = "Bildirim Gönderildi")] NotificationSent = 23,
+    [Display(Name = "Dosya Yüklendi")] FileUploaded = 24,
+    [Display(Name = "Dosya Silindi")] FileDeleted = 25
 }

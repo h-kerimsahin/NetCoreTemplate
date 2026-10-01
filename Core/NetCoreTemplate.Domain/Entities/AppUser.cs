@@ -16,6 +16,7 @@ public class AppUser : BaseEntity
     public string SecurityStamp { get; private set; } = Guid.NewGuid().ToString();
     public DateTime? LastLoginDate { get; private set; }
     public virtual AppUserProfile Profile { get; private set; } = null!;
+    public virtual ICollection<AppUserRole> UserRoles { get; private set; } = new HashSet<AppUserRole>();
     public virtual ICollection<AppUserRefreshToken> RefreshTokens { get; private set; } = new HashSet<AppUserRefreshToken>();
     public virtual ICollection<AppUserActivited> Activities { get; private set; } = new HashSet<AppUserActivited>();
     public virtual ICollection<Setting> Settings { get; private set; } = new HashSet<Setting>();
@@ -68,4 +69,12 @@ public class AppUser : BaseEntity
     }
 
     public void ResetAccessFailedCount() => AccessFailedCount = 0;
+
+    public void RefreshSecurityStamp() => SecurityStamp = Guid.NewGuid().ToString();
+
+    public void Unlock()
+    {
+        LockoutEndDate = null;
+        AccessFailedCount = 0;
+    }
 }

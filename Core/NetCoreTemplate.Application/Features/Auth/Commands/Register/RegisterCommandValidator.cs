@@ -1,14 +1,22 @@
 using FluentValidation;
+using NetCoreTemplate.Application.Validators;
 
 namespace NetCoreTemplate.Application.Features.Auth.Commands.Register;
 
-public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
+public class RegisterCommandValidator : StrongPasswordValidator<RegisterCommand>
 {
-    public RegisterCommandValidator()
+    public RegisterCommandValidator() : base(x => x.Password)
     {
-        RuleFor(x => x.UserName).NotEmpty().MinimumLength(3).Matches(@"^[a-zA-Z0-9_]+$").WithMessage("Username can only contain letters, numbers and underscores");
-        RuleFor(x => x.Email).NotEmpty().EmailAddress();
-        RuleFor(x => x.Password).NotEmpty().MinimumLength(8).Matches(@"[A-Z]").Matches(@"[a-z]").Matches(@"[0-9]").WithMessage("Password must contain at least one uppercase, lowercase letter and a number");
-        RuleFor(x => x.ConfirmPassword).Equal(x => x.Password);
+        RuleFor(x => x.UserName)
+            .NotEmpty().WithMessage("Kullanıcı adı boş olamaz.")
+            .MinimumLength(3).WithMessage("Kullanıcı adı en az 3 karakter olmalıdır.")
+            .Matches(@"^[a-zA-Z0-9_]+$").WithMessage("Kullanıcı adı sadece harf, rakam ve alt çizgi içerebilir.");
+
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("E-posta boş olamaz.")
+            .EmailAddress().WithMessage("Geçerli bir e-posta adresi giriniz.");
+
+        RuleFor(x => x.ConfirmPassword)
+            .Equal(x => x.Password).WithMessage("Şifreler eşleşmiyor.");
     }
 }

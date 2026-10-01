@@ -1,10 +1,8 @@
-using System.Security.Claims;
-using System.Text;
-using System.Text.Json;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using NetCoreTemplate.Domain.Interfaces;
 using NetCoreTemplate.Infrastructure.Idempotency;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace NetCoreTemplate.Api.Idempotency;
 

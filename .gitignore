@@ -361,3 +361,213 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# ==================================================
+# ============ NETCORE TEMPLATE GÜVENLİK ============
+# ======= Hassas Bilgiler Asla Git'e Gitmesin =======
+# ==================================================
+
+# ------------------------------
+# 1. GİZLİ AYARLAR / SECRETS
+# ------------------------------
+# ASP.NET Core User Secrets (Development sırasında güvenli storage)
+# Windows: %APPDATA%\Microsoft\UserSecrets
+# Linux/macOS: ~/.microsoft/usersecrets
+secrets.json
+secrets.xml
+
+# Ortam değişkeni dosyaları (Docker / CI / Local)
+.env
+.env.*
+!.env.example
+!.env.template
+
+# AppSettings: Custom ortam dosyaları (Staging, QA, UserLocal vb.)
+# İstisna: Standart template dosyalarımız (appsettings.json, Development, Production)
+# placeholder içerdiği için KORUNACAKTIR
+appsettings.*.json
+!appsettings.json
+!appsettings.Development.json
+!appsettings.Production.json
+
+# ------------------------------
+# 2. SERTİFİKALAR / KRİPTO
+# ------------------------------
+# Özel anahtarlar ve sertifikalar (.pfx yukarıda var, ekleri tamamla)
+*.key
+*.pem
+*.crt
+*.cer
+*.p7b
+*.p7s
+*.asc
+*.gpg
+# Strong Name Signing Key
+*.snk
+# Data Protection Key Ring (production'da external storage olsa da local yedek ignore)
+dpapi-keys/
+data-protection-keys/
+
+# ------------------------------
+# 3. VERİTABANI / YEDEK DOSYALARI
+# ------------------------------
+# (.mdf/.ldf/.ndf yukarıda var, ekler)
+*.bak
+*.bacpac
+*.dacpac
+*.trn
+*.sqldump
+*.sql-dump
+# LocalDB/EF Core snapshot
+*.db-shm
+*.db-wal
+*.db
+
+# ------------------------------
+# 4. KULLANICI DOSYALARI / UPLOADS
+# ------------------------------
+# File Storage Local Upload Klasörü (LocalFileStorageService LocalPath)
+#
+# ÖNEMLİ: Globstar pattern için (alt dizinler) aşağıdaki sırada kullan:
+#   1) Önce DİZİN DEĞİL, DOSYA pattern ile tüm içeriği derinlemesine ignore et (/**/* dosya demektir)
+#   2) Sonra alt dizinleri tekrar dahil et ki .gitkeep dosyaları taransın
+#   3) En son .gitkeep dosyalarını her seviyede dahil et
+# Bu sıra %100 çalışan klasik gitignore yöntemidir.
+
+# Adım 1: Uploads içindeki HER DOSYAYI (derinlemesine) ignore et
+**/wwwroot/uploads/**/*
+**/uploads/**/*
+# Adım 2: AMA uploads içindeki ALT DİZİNLERİN KENDİSİNİ ignore ETME (içine bakılabilsin diye)
+!**/wwwroot/uploads/**/
+!**/uploads/**/
+# Adım 3: Hiyerarşinin HER seviyesinde .gitkeep dosyalarını repoya dahil et
+!**/.gitkeep
+
+# ------------------------------
+# 5. LOGLAMA / SERILOG
+# ------------------------------
+# (log/logs klasörleri yukarıda var, ek)
+Logs/**
+logs/**
+LogFiles/**
+**/serilog-*.json
+serilog-logs/
+
+# ------------------------------
+# 6. IDE (Ekstra) / GELİŞTİRME
+# ------------------------------
+# (.vs/ yukarıda var)
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+# Tüm kullanıcı bazlı .editorconfig / local kural
+.editorconfig.local
+
+# ------------------------------
+# 7. PUBLISH / DEPLOY (PRIVATE)
+# ------------------------------
+# (.pubxml yukarıda var, ek)
+Properties/PublishProfiles/*.pubxml.user
+*.pubxml
+publish/
+app.publish/
+# Docker Compose Override (production secret içerebilir)
+docker-compose.override.yml
+docker-compose.*.override.yml
+.dockerignore.local
+.deploy/
+# Azure App Service / IIS Deployment
+web.config.transform
+applicationhost.config
+# Kudu / App Service
+.deployment
+
+# ------------------------------
+# 8. COVERAGE / TEST (Private)
+# ------------------------------
+# (coverage* yukarıda var, ek)
+coverage/
+coveragereport/
+**/TestResults/**
+*.trx
+# Benchmark
+BenchmarkDotNet.Artifacts/
+
+# ------------------------------
+# 9. NUGET / PAKET (Ekstra)
+# ------------------------------
+.nuget/
+NuGet.Config.user
+*.nupkg
+*.snupkg
+# Paket cache
+package/
+
+# ------------------------------
+# 10. FE / JS (Varsa)
+# ------------------------------
+node_modules/
+dist/
+build/
+jspm_packages/
+.bowerrc/
+
+# ------------------------------
+# 11. OPEN TELEMETRY / LOCAL EXPORT
+# ------------------------------
+otel-local/
+otel-collector/
+# OTel debug log/capture
+otel-*.json
+
+# ------------------------------
+# 12. HANGFIRE / JOBS LOCAL STATE
+# ------------------------------
+hangfire-*.db
+hangfire/state/
+
+# ------------------------------
+# 13. EMAIL / SMTP (Geçici Storage)
+# ------------------------------
+email-templates-local/
+maildrop/
+MailKit/
+# PickupDirectory dosyaları
+email-pickup/
+
+# ------------------------------
+# 14. ÖZEL HATA DÜZELTME GİZLİ DOSYALAR
+# ------------------------------
+memory.dmp
+*.dmp
+*.mdmp
+# Crash dumps
+crashreport/
+# Profil
+*.diagsession
+*.diagsessionindex
+
+# ------------------------------
+# 15. GİT GEÇİÇİ / LOCAL
+# ------------------------------
+.gitattributes.local
+.gitconfig.local
+# Diff / merge tool geçici
+*.orig
+*.rej
+
+# ==================================================
+# ============ GÜVENLİK UYARI (İNSAN OKUR) ==========
+# ==================================================
+# Yapılandırma hatası riskine karşı:
+# LÜTFEN production connection string, JWT SecretKey, SMTP Password,
+# Azure Blob ConnectionString gibi bilgileri HİÇBİR ZAMAN
+# appsettings.json veya appsettings.*.json içine HARDCODE ETMEYİN.
+# Yerine:
+#  - Development: dotnet user-secrets set "Key" "Value"
+#  - Production: Azure Key Vault, AWS Secrets Manager,
+#                Docker Secrets, veya Environment Variables kullanın.

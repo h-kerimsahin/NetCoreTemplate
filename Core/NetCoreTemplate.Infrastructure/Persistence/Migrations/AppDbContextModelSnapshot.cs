@@ -16,7 +16,7 @@ partial class AppDbContextModelSnapshot : ModelSnapshot
     // If you encounter a merge conflict in the line below, it means you need to
     // discard one of the migration branches and recreate its migrations on top of
     // the other branch. See https://aka.ms/efcore-docs-migrations-conflicts for more info.
-    public override string LastMigrationId => "20260930135542_InitialCreate";
+    public override string LastMigrationId => "20260930221022_V2_FullFeatures_AllEntities";
 
     protected override void BuildModel(ModelBuilder modelBuilder)
     {
@@ -26,6 +26,229 @@ partial class AppDbContextModelSnapshot : ModelSnapshot
             .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
         SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+        modelBuilder.Entity("NetCoreTemplate.Domain.Entities.AppNotification", b =>
+            {
+                b.Property<Guid>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("datetime2");
+
+                b.Property<Guid?>("CreatedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("Data")
+                    .HasMaxLength(4000)
+                    .HasColumnType("nvarchar(4000)");
+
+                b.Property<Guid?>("DeletedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime?>("DeletedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<bool>("IsRead")
+                    .HasColumnType("bit");
+
+                b.Property<string>("Message")
+                    .IsRequired()
+                    .HasMaxLength(4000)
+                    .HasColumnType("nvarchar(4000)");
+
+                b.Property<Guid?>("ModifiedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime?>("ModifiedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<int>("NotificationType")
+                    .HasColumnType("int");
+
+                b.Property<DateTime?>("ReadAt")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("Slug")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<int>("Status")
+                    .HasColumnType("int");
+
+                b.Property<string>("Title")
+                    .IsRequired()
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
+
+                b.Property<Guid?>("UserId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.HasKey("Id");
+
+                b.HasIndex("UserId", "IsRead");
+
+                b.ToTable("AppNotifications");
+            });
+
+        modelBuilder.Entity("NetCoreTemplate.Domain.Entities.AppPermission", b =>
+            {
+                b.Property<Guid>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<string>("Code")
+                    .IsRequired()
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
+
+                b.Property<Guid?>("CreatedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<Guid?>("DeletedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime?>("DeletedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("Description")
+                    .HasMaxLength(1000)
+                    .HasColumnType("nvarchar(1000)");
+
+                b.Property<int>("GroupName")
+                    .HasColumnType("int");
+
+                b.Property<bool>("IsActive")
+                    .HasColumnType("bit");
+
+                b.Property<Guid?>("ModifiedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime?>("ModifiedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
+
+                b.Property<string>("Slug")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<int>("Status")
+                    .HasColumnType("int");
+
+                b.HasKey("Id");
+
+                b.HasIndex("Code")
+                    .IsUnique();
+
+                b.ToTable("AppPermissions");
+            });
+
+        modelBuilder.Entity("NetCoreTemplate.Domain.Entities.AppRole", b =>
+            {
+                b.Property<Guid>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<string>("ConcurrencyStamp")
+                    .IsRequired()
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
+
+                b.Property<Guid?>("CreatedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<Guid?>("DeletedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime?>("DeletedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("Description")
+                    .HasMaxLength(1000)
+                    .HasColumnType("nvarchar(1000)");
+
+                b.Property<Guid?>("ModifiedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime?>("ModifiedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
+
+                b.Property<string>("NormalizedName")
+                    .IsRequired()
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
+
+                b.Property<string>("Slug")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<int>("Status")
+                    .HasColumnType("int");
+
+                b.HasKey("Id");
+
+                b.HasIndex("Name")
+                    .IsUnique();
+
+                b.ToTable("AppRoles");
+            });
+
+        modelBuilder.Entity("NetCoreTemplate.Domain.Entities.AppRolePermission", b =>
+            {
+                b.Property<Guid>("RoleId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<Guid>("PermissionId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<Guid?>("CreatedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<Guid?>("DeletedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime?>("DeletedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<Guid>("Id")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<Guid?>("ModifiedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime?>("ModifiedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("Slug")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<int>("Status")
+                    .HasColumnType("int");
+
+                b.HasKey("RoleId", "PermissionId");
+
+                b.HasIndex("PermissionId");
+
+                b.ToTable("AppRolePermissions");
+            });
 
         modelBuilder.Entity("NetCoreTemplate.Domain.Entities.AppUser", b =>
             {
@@ -313,6 +536,179 @@ partial class AppDbContextModelSnapshot : ModelSnapshot
                 b.ToTable("AppUserRefreshTokens");
             });
 
+        modelBuilder.Entity("NetCoreTemplate.Domain.Entities.AppUserRole", b =>
+            {
+                b.Property<Guid>("UserId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<Guid>("RoleId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<Guid?>("CreatedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<Guid?>("DeletedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime?>("DeletedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<Guid>("Id")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<Guid?>("ModifiedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime?>("ModifiedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("Slug")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<int>("Status")
+                    .HasColumnType("int");
+
+                b.HasKey("UserId", "RoleId");
+
+                b.HasIndex("RoleId");
+
+                b.ToTable("AppUserRoles");
+            });
+
+        modelBuilder.Entity("NetCoreTemplate.Domain.Entities.AuditEntry", b =>
+            {
+                b.Property<Guid>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime>("ChangedAt")
+                    .HasColumnType("datetime2");
+
+                b.Property<Guid?>("ChangedByUserId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<Guid?>("CreatedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<Guid?>("DeletedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime?>("DeletedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<Guid>("EntityId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<string>("EntityName")
+                    .IsRequired()
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
+
+                b.Property<byte>("EntityState")
+                    .HasColumnType("tinyint");
+
+                b.Property<Guid?>("ModifiedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime?>("ModifiedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("NewValue")
+                    .HasMaxLength(4000)
+                    .HasColumnType("nvarchar(4000)");
+
+                b.Property<string>("OldValue")
+                    .HasMaxLength(4000)
+                    .HasColumnType("nvarchar(4000)");
+
+                b.Property<string>("PropertyName")
+                    .IsRequired()
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
+
+                b.Property<string>("Slug")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<int>("Status")
+                    .HasColumnType("int");
+
+                b.HasKey("Id");
+
+                b.HasIndex("ChangedByUserId");
+
+                b.HasIndex("EntityName", "EntityId");
+
+                b.ToTable("AuditEntries");
+            });
+
+        modelBuilder.Entity("NetCoreTemplate.Domain.Entities.BackgroundJobLog", b =>
+            {
+                b.Property<Guid>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<Guid?>("CreatedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<Guid?>("DeletedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime?>("DeletedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("ErrorMessage")
+                    .HasMaxLength(4000)
+                    .HasColumnType("nvarchar(4000)");
+
+                b.Property<DateTime?>("FinishedAt")
+                    .HasColumnType("datetime2");
+
+                b.Property<int>("JobStatus")
+                    .HasColumnType("int");
+
+                b.Property<string>("JobType")
+                    .IsRequired()
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
+
+                b.Property<Guid?>("ModifiedBy")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<DateTime?>("ModifiedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("Payload")
+                    .HasMaxLength(4000)
+                    .HasColumnType("nvarchar(4000)");
+
+                b.Property<int>("RetryCount")
+                    .HasColumnType("int");
+
+                b.Property<string>("Slug")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<DateTime?>("StartedAt")
+                    .HasColumnType("datetime2");
+
+                b.Property<int>("Status")
+                    .HasColumnType("int");
+
+                b.HasKey("Id");
+
+                b.HasIndex("JobType", "CreatedDate");
+
+                b.ToTable("BackgroundJobLogs");
+            });
+
         modelBuilder.Entity("NetCoreTemplate.Domain.Entities.Setting", b =>
             {
                 b.Property<Guid>("Id")
@@ -449,6 +845,25 @@ partial class AppDbContextModelSnapshot : ModelSnapshot
                 b.ToTable("SystemLogs");
             });
 
+        modelBuilder.Entity("NetCoreTemplate.Domain.Entities.AppRolePermission", b =>
+            {
+                b.HasOne("NetCoreTemplate.Domain.Entities.AppPermission", "Permission")
+                    .WithMany("RolePermissions")
+                    .HasForeignKey("PermissionId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.HasOne("NetCoreTemplate.Domain.Entities.AppRole", "Role")
+                    .WithMany("RolePermissions")
+                    .HasForeignKey("RoleId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.Navigation("Permission");
+
+                b.Navigation("Role");
+            });
+
         modelBuilder.Entity("NetCoreTemplate.Domain.Entities.AppUserActivited", b =>
             {
                 b.HasOne("NetCoreTemplate.Domain.Entities.AppUser", "AppUser")
@@ -481,6 +896,25 @@ partial class AppDbContextModelSnapshot : ModelSnapshot
                 b.Navigation("AppUser");
             });
 
+        modelBuilder.Entity("NetCoreTemplate.Domain.Entities.AppUserRole", b =>
+            {
+                b.HasOne("NetCoreTemplate.Domain.Entities.AppRole", "Role")
+                    .WithMany("UserRoles")
+                    .HasForeignKey("RoleId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.HasOne("NetCoreTemplate.Domain.Entities.AppUser", "User")
+                    .WithMany("UserRoles")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.Navigation("Role");
+
+                b.Navigation("User");
+            });
+
         modelBuilder.Entity("NetCoreTemplate.Domain.Entities.Setting", b =>
             {
                 b.HasOne("NetCoreTemplate.Domain.Entities.AppUser", "AppUser")
@@ -489,6 +923,18 @@ partial class AppDbContextModelSnapshot : ModelSnapshot
                     .OnDelete(DeleteBehavior.Cascade);
 
                 b.Navigation("AppUser");
+            });
+
+        modelBuilder.Entity("NetCoreTemplate.Domain.Entities.AppPermission", b =>
+            {
+                b.Navigation("RolePermissions");
+            });
+
+        modelBuilder.Entity("NetCoreTemplate.Domain.Entities.AppRole", b =>
+            {
+                b.Navigation("RolePermissions");
+
+                b.Navigation("UserRoles");
             });
 
         modelBuilder.Entity("NetCoreTemplate.Domain.Entities.AppUser", b =>
@@ -501,6 +947,8 @@ partial class AppDbContextModelSnapshot : ModelSnapshot
                 b.Navigation("RefreshTokens");
 
                 b.Navigation("Settings");
+
+                b.Navigation("UserRoles");
             });
 #pragma warning restore 612, 618
     }

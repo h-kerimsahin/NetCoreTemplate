@@ -341,6 +341,195 @@ Bir NuGet paketi eklemeden ÖNCE:
 
 ---
 
+## KURAL 14: RBAC (ROL & YETKİ) KURALLARI (YENİ - ZORUNLU)
+
+Rol ve Yetki sistemi TÜM endpointler için kullanılmalıdır. SuperAdmin/Admin/Manager/Support/User/Customer rolleri ve 50+ Permission (12 grup) mevcuttur.
+
+### Zorunlu
+1. **Admin yetkisi gerektiren endpointler için:** `.RequireAuthorization(policy => policy.RequireRole("SuperAdmin,Admin"))` veya daha dar yetki için `.RequireAuthorization(policy => policy.RequireRole("SuperAdmin"))` — HİÇBİR zaman yönetici paneli endpointlerini `.AllowAnonymous()` yapma!
+2. **Kullanıcı kendi verisi için:** Handler içinde `currentUserId` ile kaydın `CreatedBy` veya `UserId` alanını KONTROL ET — başka kullanıcının kaydını güncellemesini/silmesini engelle.
+3. **Rol atama/revoke işlemleri:** SADECE SuperAdmin/Admin yapabilir. Normal User kendi rolünü değiştiremez.
+4. **Permission (İnce yetki) gerekiyorsa:** Rol bazlı yetki yetmiyorsa `.RequireAuthorization("Permission:User.Create")` Policy kullan — Policy DependencyInjection içinde tanımlı olmalı.
+5. **Seed SuperAdmin hesabını PRODUCTION'da MUTLAKA DEĞİŞTİR:** varsayılan `superadmin@netcoretemplate.com / Qwerty123!` açık hesap bırakma (Güvenlik açığı).
+
+### Rol Hiyerarşisi (Geniş→Dar)
+SuperAdmin → Admin → Manager → Support → User → Customer
+
+### Anti-Pattern
+❌ "Herkes Admin" yapma — Minimum yetki prensibi (Least Privilege)
+❌ Yeni bir Admin endpointi eklediğinde rol kontrolü eklemek unutulursa **açık** olur!
+❌ Kullanıcı ID'sini Client'tan (query/body'den) al — HER ZAMAN `HttpContext.User.Claims` NameIdentifier claim'inden AL (dolandırıcılık engeli).
+
+---
+
+## KURAL 15: RATE LIMITING + LOCKOUT (BRUTE FORCE KORUMASI) (YENİ - ZORUNLU)
+
+### Rate Limiting Politikaları (3 adet)
+| Politika Adı | Limit | Süre | Kullanım Yeri |
+|---|---|---|---|
+| `AuthFixedWindow` | 10 istek | 10 dakika | Login, Register, Forgot-Password, Reset-Password (brute force koruması) |
+| `PerUserSlidingWindow` | 150 istek | 60 saniye | Giriş yapmış kullanıcıların tümü (DoS koruması) |
+| `GlobalIPFixedWindow` | 500 istek | 15 dakika | Tüm endpointler (IP bazlı genel koruma) |
+
+### Zorunlu
+1. **Auth endpoint'leri için:** `.RequireRateLimiting("AuthFixedWindow")` EKLE (Login, Register, ForgotPassword, ResetPassword)
+2. **Hesap Kilitleme (Lockout) — 3 hatalı login:** AppUser içinde `AccessFailedCount` ve `LockoutEnd` kullanılır:
+   - appsettings `LockoutSettings:MaxFailedAttempts = 5` (3 veya 5 önerilir)
+   - `LockoutSettings:LockoutDurationMinutes = 15` (15dk kilit)
+   - 6. hatalı denemede kullanıcı 15dk giriş YAPAMAZ — 401 "Hesap kilitlendi X kadar süre sonra tekrar deneyin"
+3. **CORS Politikası (SecureCorsPolicy):**
+   - Development: `AllowAllOrigins` sadece dev'de
+   - Production: `AllowedOrigins` whitelist'den gelenlere izin VER (`appsettings.json:CorsSettings:AllowedOrigins` dizisi)
+   - Production'da AllowCredentials + AllowedHeaders: Authorization, Content-Type, X-Idempotency-Key
+4. **429 TooManyRequests yanıtı:** Middleware otomatik ApiResponse formatına çevirir, ELLE custom 429 yazma.
+
+### Anti-Pattern
+❌ Production'da CORS `AllowAllOrigins` yapmak → CSRF/XSS açığı
+❌ Login endpoint'inde RateLimiting atlamak → Brute force şifre kırma saldırısı açık
+❌ Lockout mekanizmasını kaldırmak → MaxFailedAttempts = 999999 yapmak
+
+---
+
+## KURAL 16: EMAİL GÖNDERİMLERİ - HANGFIRE KUYRUK (ZORUNLU)
+
+⚠️ **HİÇBİR ZAMAN HTTP Request pipeline'ında `await _emailService.SendAsync(...)` YAPMA!** → Kullanıcı 5-10 sn SMTP cevabını bekler, UI donar, timeout olur.
+
+### Doğru Pattern (Hangfire Background Job)
+1. **Handler içinde 2 adım:**
+   ```csharp
+   // 1. Job Log kaydı (Pending durumda)
+   var jobLog = BackgroundJobLog.Create("WelcomeEmail", user.Id, JsonSerializer.Serialize(new { email = user.Email }));
+   await _uow.BackgroundJobLogs.AddAsync(jobLog, ct);
+   await _uow.SaveChangesAsync(ct);
+   // 2. HANGFIRE KUYRUK - AWAIT YOK! Fire-and-Forget
+   Hangfire.BackgroundJob.Enqueue<EmailSenderJob>(job => job.Execute(jobLog.Id, user.Email, emailSubject, emailBody, ct));
+   ```
+2. **EmailSenderJob içinde Polly Retry (3 kez exponential backoff):** 1. deneme 2sn, 2. 4sn, 3. 8sn bekle → SmtpException veya IOException'da tekrar dene.
+3. **Başarısız olursa:** JobStatus=Failed, BackgroundJobLog RetryCount artışı + ErrorMessage kaydı. Kullanıcıya HTTP cevabı zaten dönmüştür, kullanıcıyı BEKLEME.
+
+### Zorunlu
+1. **3 email türü:** Welcome (kayıt sonrası), ResetPassword (şifre sıfırlama linki), 2FA Code — HEPİ Hangfire kuyruğundan.
+2. **NightlyCleanupJob (Her gün 02:00):** 30 gün eski SystemLog + RefreshToken + 365 gün eski AuditEntry sil + LockoutEnd süresi dolmuş kullanıcıların kilidini aç.
+3. **Hangfire Dashboard:** `/hangfire` adresi SADECE SuperAdmin ve Admin rolündekiler tarafından görülebilir (Dashboard Authorization filter kullanılır).
+4. **Hangfire SQL Storage:** Schema adı `Hangfire` (appsettings'ten değiştirilebilir), ayrı tablolar, AppDbContext tabloları ile karışmaz.
+
+### Anti-Pattern
+❌ `await _emailService.SendAsync(...)` HTTP request içinde (Kullanıcı bekler!) ❌
+❌ Hangfire Dashboard authsuz → Herkes job'ları görebilir/silebilir/tekrar çalıştırabilir
+❌ Polly Retry mekanizmasını kaldırmak → SMTP 503 hatasında mail hiç gitmez
+
+---
+
+## KURAL 17: AUDIT ENTRY - KOLON BAZLI SORGULANABİLİR LOGLAMA (YENİ)
+
+Eski `AppUserActivited` JSON özet logunun YANINDA, **kolon bazlı** `AuditEntry` tablosu kullanılır. Hangi entity'nin hangi property'si ne değişti → TEK SATIR, SORGULANABİLİR (SQL WHERE ile aranır).
+
+### AuditEntry Şeması
+| Kolon | Açıklama |
+|---|---|
+| EntityName | "AppUser", "Product" vb. |
+| EntityId | Değişen kaydın Guid Id'si |
+| PropertyName | "FirstName", "Email", "Status" |
+| OldValue | Değişmeden önceki değer (string) |
+| NewValue | Değiştikten sonraki değer |
+| ChangedByUserId | İşlemi yapan kullanıcı ID (IHttpContextAccessor'dan) |
+| ChangedAt | DateTimeOffset |
+
+### Zorunlu
+1. **SaveChanges'ta ProcessAudit:** `AppDbContext.ProcessAudit()` ChangeTracker.Entries'te Modified/Added/Deleted olan HER PROPERTY için ayrı AuditEntry satırı ekler — Otomatik çalışır, ELLE AuditEntry yazma!
+2. **Infinite Loop Koruması:** `private bool _auditProcessed` flag + `if (type == typeof(AuditEntry)) continue;` → AuditEntry kendini audit etmez (StackOverflow engeli).
+3. **CreatedBy/ModifiedBy/DeletedBy OTOMATİK:** AppDbContext constructor IHttpContextAccessor inject → currentUserId = `NameIdentifier` claim'den alınır → TÜM entitylerin CreatedBy/ModifiedBy/DeletedBy kolonları SET EDİLİR, elle null bırakılamaz.
+4. **Audit Sorgusu Örnek:** `GET /api/v1/odata/AuditEntries?$filter=EntityName eq 'AppUser' and PropertyName eq 'Email'&$orderby=ChangedAt desc` → Kimin email'ini değiştirdiğimizi görünür.
+
+### Anti-Pattern
+❌ AppUserActivited JSON logunu parse ederek kolon ara → Yavaş, zordur, indexlenmez. Yerine AuditEntry tablosu kullan!
+❌ CreatedBy kolonunu null bırakmak → HttpContextAccessor inject UNUTULMUŞ demektir (Data sorumluluğu kimin?)
+❌ AuditEntry için `IgnoreQueryFilters()` kullanmamak → 30 gün sonra silinmişse görünmez ama backup'ta durur.
+
+---
+
+## KURAL 18: ODATA v4 DESTEĞİ (YENİ - LİSTE ENDPOİNTLERİ İÇİN ZORUNLU)
+
+Custom `Where/OrderBy/Select` DTO extension metodları YAZMA! Bunun yerine **OData v4** query option'ları kullan: `$filter, $select, $orderby, $expand, $count, $top, $skip`.
+
+### OData Endpoint URL Formatı
+```
+GET /api/v{version}/odata/{EntitySet}?$filter=...&$select=...&$orderby=...&$count=true&$top=20&$skip=0
+```
+
+### Mevcut 7 EntitySet (OData EDM Model)
+Users, UserProfiles, Roles, Permissions, SystemLogs, UserActivities, AuditEntries, Notifications (ODataModelBuilder.cs içinde tanımlı)
+
+### Zorunlu
+1. **Yeni entity eklediğinde ODataModelBuilder.cs güncelle:**
+   ```csharp
+   builder.EntitySet<Product>("Products").EntityType.HasKey(p => p.Id);
+   // Eğer ilişki expand edilecekse:
+   builder.EntitySet<Product>("Products").EntityType.Expand(10).Select().OrderBy().Filter().Count().Page(100, 1);
+   ```
+2. **OData endpointi:** `app.MapODataRoute("odata", "api/v{version:apiVersion}/odata", GetEdmModel());` — ApiVersioning ile uyumlu v1/v2.
+3. **MaxTop sınırı:** appsettings `OData:MaxTop = 100` → Tek istekte en fazla 100 satır (DoS koruması).
+4. **$count=true query param varsa:** Response içinde `@odata.count = totalCount` döner, client grid toplam sayısını bilir.
+5. **HasApiVersion(1.0, 2.0):** Tüm OData EntitySet'ler hem v1 hem v2 versiyonda yayınlanır — Versiyonlama ile uyumlu.
+
+### Anti-Pattern
+❌ Custom `GetProductsFiltered(string searchTerm, string sortBy, int page, ...)` metodu yazıp 20 parametre alan endpoint → KOD KİRLİLİĞİ, OData kullan!
+❌ OData'da `$expand` kısıtlamasız yap → 10 seviye nested include EF patlatır (Default MaxExpansionDepth = 2)
+❌ ApiVersioning olmadan OData kullan → v1 Users ile v2 Users farklı şema olursa client kırılır.
+
+---
+
+## KURAL 19: SIGNALR GERÇEK ZAMANLI BİLDİRİM (YENİ)
+
+Kullanıcıya anında bildirim göndermek için (Browser Push benzeri) **INotificationService + SignalR Hub** kullan — Doğrudan DB AppNotification yazma!
+
+### Mimarisi
+1. **INotificationService interface (Domain katmanı):** `SendToUserAsync(userId, title, message, type)` + `SendToAllAsync(...)`
+2. **DatabaseNotificationService (Infrastructure impl):** Önce DB `AppNotification` kaydı INSERT → Sonra SignalR Hub üzerinden client'a WS ile gönder (Çevrimdışı kullanıcı için DB'de kayıt durur, sonra login olunca çeker).
+3. **NotificationHub:** `/hubs/notification` endpointi, OnConnectedAsync'de kullanıcıyı `Groups.AddToGroup("user-{userId}")` gruba ekler.
+4. **AppNotification tablosu:** UserId, Title, Message, NotificationType (Info/Success/Warning/Error), IsRead, CreatedAt + UserId+IsRead Index.
+
+### Zorunlu
+1. **Client notification çekme:** `GET /api/v1/notifications/mine?page=1&pageSize=20` + `PUT /api/v1/notifications/{id}/mark-as-read` — Çevrimdışı sırasında kaybolan bildirimleri çekme.
+2. **UserActivity Log:** Her NotificationSend → AppUserActivited tablosunda `NotificationSent` tipi log kaydı (IUserActivityLogger).
+3. **Çoklu instance (pod) deployment için:** İLERDE SignalR Redis Backplane ekle (Şu an InMemory — Tek instance yeterli).
+
+### Anti-Pattern
+❌ Doğrudan `NotificationHub.Clients.Group(...).SendAsync` çağırıp DB'ye kaydetmemek → Kullanıcı offline'sa bildirim KAYBOLUR.
+❌ INotificationService kullanmadan Endpoint handler içinde SignalR Hub çağırmak → Interface segregation ihlali, test edilemez.
+❌ Bildirimleri kalıcı silmek yerine IsRead=true yap — Kullanıcı geçmişe baktığında görsün.
+
+---
+
+## KURAL 20: FILE STORAGE - STRATEGY PATTERN 2 İMPL (YENİ)
+
+Dosya upload (avatar, ürün fotoğrafı, belge) için **IFileStorageService interface** kullan; LocalFileStorage (Development wwwroot/uploads) veya AzureBlobStorageService (Production) DI ile seçilir — Kodda Storage kodunu doğrudan yazma!
+
+### Interface (Domain)
+```csharp
+public interface IFileStorageService
+{
+    Task<string> UploadFileAsync(string container, string fileName, Stream fileStream, string contentType, CancellationToken ct);
+    Task DeleteFileAsync(string container, string fileUrl, CancellationToken ct);
+    Task<string?> GetPublicUrlAsync(string container, string fileUrl, CancellationToken ct);
+}
+```
+
+### Zorunlu
+1. **Container Whitelist:** `["avatars", "products", "documents"]` dışında klasör YASAK (appsettings FileStorage:AllowedContainers).
+2. **Path Traversal Koruması:** `fileName = Path.GetFileName(fileName)` + `container` whitelist kontrol — `../` ile üst klasöre çıkma engeli.
+3. **Extension Whitelist:** `.jpg, .jpeg, .png, .gif, .webp, .pdf` sadece izin verilenler, `AllowedFileExtensions` kontrol + MIME type contentType doğrulaması.
+4. **Dosya Boyutu Sınırı:** `MaxFileSizeBytes = 10 * 1024 * 1024` (10 MB) — Request middleware veya Validator ile kontrol.
+5. **Storage Provider Seçimi:** appsettings `FileStorage:Provider = "Local"` veya `"AzureBlob"` — DI AddInfrastructure içinde switch-case ile hangi impl kullanılacağı belirlenir.
+6. **AzureBlob için ConnectionString:** `FileStorage:AzureBlob:ConnectionString` + `ContainerName` — Production User Secrets / Key Vault.
+
+### Anti-Pattern
+❌ LocalFileStorage'da `Path.Combine(wwwroot, userProvidedPath)` yapıp Path.GetFileName kullanmamak → Path traversal saldırısı (sunucuya webshell yükleme!) ❌
+❌ Dosya yüklemeden önce extension+boyut kontrolü YAPMAK → zararlı .exe/.php/.aspx sunucuya yüklenir ❌
+❌ Storage seçimini kodda `if(isProduction)` ile hardcode yapma → appsettings'ten Provider oku, DI ile bağla
+
+---
+
 ## 🚫 KESİNLİKLE YAPILMAMASI GEREKENLER (ANTI-PATTERN BLACKLIST)
 
 1. ❌ **Domain projesine ProjectReference eklemek** (Domain EN ÜST, hiç kimseyi referans almaz!)
@@ -366,29 +555,79 @@ Bir NuGet paketi eklemeden ÖNCE:
 21. ❌ **ApiResponse standardını bozmak** — TÜM yanıtlar (başarı + hata) AYNI JSON formatında OLMAK ZORUNDA
 22. ❌ **Liste endpointlerinde sayfalama yapmadan 1000+ satırı tek yanıtta döndürmek** (performans sorunu)
 23. ❌ **POST/PUT endpointlerinde IdempotencyEndpointFilter eklememek** (double-click ile mükerrer kayıt yaratılır)
+24. ❌ **(A24) EmailService.SendAsync'i HTTP Request içinde await ile çağırmak** → Kullanıcı SMTP cevabını 5-10sn bekler. YERİNE Hangfire BackgroundJob.Enqueue KULLAN (KURAL 16)
+25. ❌ **(A25) CreatedBy/ModifiedBy kolonlarını null bırakmak** → AppDbContext constructor'a IHttpContextAccessor inject + ProcessAudit içinde NameIdentifier claim'den currentUserId almayı UNUTMA (KURAL 17.3)
+26. ❌ **(A26) SecurityStamp Middleware'ı pipeline'dan kaldırmak / atlamak** → ChangePassword veya LogoutAll sonrası ESKI JWT ile hala giriş olur. ZORUNLU (KURAL 11 + SecurityStampMiddleware)
+27. ❌ **(A27) Production ortamında CORS AllowAllOrigins yapmak** → CSRF/XSS açığı! SecureCorsPolicy whitelist kullan (KURAL 15)
+28. ❌ **(A28) OData v4 yerine custom GetFiltered 20+ parametreli endpoint yazmak** → $filter/$select/$orderby/$count/$top/$skip OData standard kullan (KURAL 18)
+29. ❌ **(A29) SaveChanges ProcessAudit'de AuditEntry tablosunu atlamak / kolon bazlı log yapmamak** → AppUserActivited JSON logu parse edilemez, indexlenmez. AuditEntry ZORUNLU (KURAL 17)
+30. ❌ **(A30) StrongPasswordValidator'da ÖZEL KARAKTER zorunluluğunu kaldırmak** → 4 şart: BÜYÜK + küçük + sayı + ÖZEL KARAKTER (!@#$%^&*) hepsi ZORUNLU (KURAL 5 + StrongPasswordValidator base)
+31. ❌ **(A31) /hangfire Dashboard'ı Authorize olmadan açmak** → Herkes background job'ları görebilir, silebilir, tekrar çalıştırabilir. SuperAdmin/Admin rol filtresi ZORUNLU (KURAL 16)
+32. ❌ **(A32) LocalFileStorage'da Path.GetFileName kullanmadan user-provided path ile kaydetmek** → Path traversal saldırısı! `../../Windows/System32/cmd.aspx` gibi webshell yükleme açığı (KURAL 20)
+33. ❌ **(A33) JWT Token'a security_stamp claim eklememek** → LogoutAllDevices veya ChangePassword sonrası SecurityStampMiddleware eski JWT'yi reddedemez, kullanıcı çıkış yapmaz (KURAL 11 + SecurityStampMiddleware)
+34. ❌ **(A34) Soft Delete geri alma (Restore) işleminde IgnoreQueryFilters KULLANMAMAK** → Status=Deleted kayıtlar Global Query Filter ile GİZLENDİĞİNDEN bulunamaz ve restore edilemez. GetDeleted + Restore'de `.IgnoreQueryFilters()` ZORUNLU (KURAL 11 SoftDelete + BaseEntity.Restore)
+35. ❌ **(A35) SaveChanges ProcessAudit içinde AuditEntry entity'sini audit etmeye çalışmak + _auditProcessed flag unutmak** → AuditEntry INSERT → SaveChanges → tekrar ProcessAudit → tekrar AuditEntry INSERT → INFINITE LOOP StackOverflow! `if (type == typeof(AuditEntry)) continue;` + `_auditProcessed = true` flag ZORUNLU (KURAL 17.2)
 
 ---
 
-## ✅ YAPILMASI GEREKENLER / CHECKLIST (Yeni Feature Eklerken)
+## ✅ YAPILMASI GEREKENLER / CHECKLIST (Yeni Feature Eklerken - 37 Madde)
 
-Önce bu checklist'i geç, sonra commit et:
-- [ ] Katman referansları doğru mu? (Api → Infrastructure → Application → Domain döngüsüz)
-- [ ] Yeni entity BaseEntity'den kalıtım alıyor mu? Property setter private/protected?
-- [ ] Entity için IEntityRepository + Impl var mı? IUnitOfWork'da property var mı?
-- [ ] EF Configuration (IEntityTypeConfiguration) yazıldı mı?
-- [ ] Feature/[X] için Command/Query **ApiResponse<T> veya PagedResponse<T>** dönüyor mu? (SADECE düz DTO YOK!)
-- [ ] Handler içinde Success/Unit return'ları **ApiResponse.Success(...)** ile sarıldı mı?
-- [ ] Validator yazıldı mı? PagedRequest varsa PageSize ≤ 200 doğrulaması var mı?
-- [ ] DTO'lar ve MappingProfile güncellendi mi?
-- [ ] Endpoints/IEndpoint sınıfı yazıldı, Program.cs MAP yazılmadı mı?
-- [ ] POST/PUT/DELETE endpointlerine Idempotency filter eklendi mi? (KURAL 7)
-- [ ] MapGet liste endpointleri sayfalı mı? (ApiResponse.Paged kullanılıyor mu? KURAL 6)
-- [ ] Tüm Results.Ok/Created/NoContent **Results.Json(ApiResponse, options, statusCode)** pattern'ına çevrildi mi? (KURAL 5)
-- [ ] Kaydedilen entity için SaveChanges audit log (AppUserActivited) otomatik düşüyor mu?
-- [ ] Exception için SystemLog tablosuna kayıt düşüyor mu? (Middleware test — ApiResponse.Fail formatında yanıt)
-- [ ] Security: Password için BCrypt, JWT secret Key Vault/User Secrets
-- [ ] Build: `dotnet build NetCoreTemplate.slnx` 0 hata (mümkünse 0 uyarı)
-- [ ] BU DOSYAYI (AI_RULES_FOR_THIS_REPO.md) güncellemeyi unuttun mu?
+Önce BU checklist'in TÜMÜNÜ geç, sonra commit et. **0 HATA + 0 CS Uyarı (build-level) + GetDiagnostics 0 ZORUNLUDUR.**
+
+---
+### 🏗️ MİMARİ + STANDARTLAR (1-9)
+- [ ] **1.** Katman referansları doğru mu? (Api → Infrastructure → Application → Domain, DÖNGÜ YOK, Domain 0 ProjectRef)
+- [ ] **2.** Yeni entity BaseEntity'den kalıtım alıyor mu? Property setter private/protected? Non-nullable ctor'da set?
+- [ ] **3.** Entity için ÖZEL IEntityRepository + Impl var mı? IUnitOfWork'da çoğul property (Products) var mı? (KURAL 3)
+- [ ] **4.** EF Configuration (IEntityTypeConfiguration) yazıldı mı? PK/FK/Index/MaxLength tanımlandı mı?
+- [ ] **5.** Feature/[X] için Command/Query **ApiResponse<T> veya PagedResponse<T>** DÖNÜYOR MU? (SADECE düz DTO YOK! KURAL 4/5)
+- [ ] **6.** Handler'daki BÜTÜN return'lar **ApiResponse.Success/Paged(...)** ile SARILDI MI? (KURAL 5)
+- [ ] **7.** TÜM Command'lar için Validator yazıldı mı? PagedRequest varsa `PageNumber >=1 && PageSize <=200` doğrulaması var mı?
+- [ ] **8.** DTO'lar (record) ve MappingProfile CreateMap<,> güncellendi mi?
+- [ ] **9.** Build: `dotnet build NetCoreTemplate.slnx -v q` 0 HATA + 0 CS-LEVEL UYARI (sadece NuGet transit uyarıları kabul edilir) + `GetDiagnostics` 0
+
+---
+### 🔗 ENDPOINT + API STANDARTLARI (10-15)
+- [ ] **10.** Endpoints/[X]Endpoints.cs sınıfı IEndpoint implement mi? Program.cs'e ELLE Map* YAZILMADI MI? (KURAL 10)
+- [ ] **11.** BÜTÜN POST/PUT/DELETE endpointlerine `.AddEndpointFilter<IdempotencyEndpointFilter>()` EKLENDİ Mİ? (KURAL 7)
+- [ ] **12.** TÜM GET liste endpointleri SAYFALI mı? `ApiResponse.Paged(items, page, size, totalCount)` KULLANILDI MI? (KURAL 6)
+- [ ] **13.** BÜTÜN yanıtlar `Results.Json(response, JsonOptions, statusCode: response.StatusCode)` pattern'ı ile mi? `Results.Ok(duzDto)` YOK! (KURAL 5)
+- [ ] **14.** API Versiyonlama: Endpoint grubu `.HasApiVersion(1.0)` + varsa v2 için `.HasApiVersion(2.0)` eklendi mi? (KURAL 10)
+- [ ] **15.** Auth endpointleri (Login/Register/Forgot/Reset) `.RequireRateLimiting("AuthFixedWindow")` + RateLimit config doğru mu? (KURAL 15)
+
+---
+### 🛡️ RBAC + GÜVENLİK (16-22)
+- [ ] **16.** Admin/Manager endpointleri `.RequireAuthorization(p => p.RequireRole("SuperAdmin,Admin"))` ile KISITLANDI MI? (KURAL 14)
+- [ ] **17.** SuperAdmin seed hesabı PRODUCTION'da değiştirildi mi? (Email/şifre - Güvenlik açığı KURAL 14.5)
+- [ ] **18.** CORS SecureCorsPolicy: Production AllowedOrigins whitelist'ten mi? AllowCredentials + ExposedHeaders doğru mu? (KURAL 15)
+- [ ] **19.** Lockout (Hatalı Login): MaxFailedAttempts=5, LockoutDurationMinutes=15, Login handler AccessFailedCount/LockoutEnd set ediyor mu? (KURAL 15)
+- [ ] **20.** Strong Şifre Policy: Register/Reset/ChangePassword validator'ları StrongPasswordValidator base KALITIMI alıyor, 4 ŞART (Büyük+Küçük+Sayı+Özel) ZORUNLU mu? (KURAL 5/30)
+- [ ] **21.** JWT security_stamp claim + SecurityStampMiddleware (30sn cache): ChangePassword/LogoutAll sonra ESKI JWT 401 alıyor mu? (KURAL 11/33)
+- [ ] **22.** CreatedBy/ModifiedBy/DeletedBy: AppDbContext constructor IHttpContextAccessor inject + ProcessAudit currentUserId claim SET EDİYOR MU? (KURAL 17.3 / A25)
+
+---
+### 🗄️ AUDIT + LOG + RESTORE (23-26)
+- [ ] **23.** AuditEntry (Kolon bazlı): SaveChanges'da HER Modified entity PROPERTY başına TEK AuditEntry SATIRI ekleniyor mu? (EntityName/EntityId/PropertyName/Old/New - KURAL 17)
+- [ ] **24.** AuditEntry Infinite Loop Koruması: `_auditProcessed` flag + `if (type == typeof(AuditEntry)) continue;` VAR MI? (KURAL 17.2 / A35)
+- [ ] **25.** Soft Delete Restore: GetDeletedEntities + RestoreDeletedEntity `.IgnoreQueryFilters()` KULLANIYOR MU? Restore Status=Deleted → Status=Active + Entity.Restore() domain metodu? (KURAL 11 / A34)
+- [ ] **26.** SaveChanges sonrası AppUserActivited (JSON özet) + AuditEntry (kolon bazlı) 2 tabloya da kayıt DÜŞÜYOR MU? Middleware Exception SystemLog tablosuna kaydediyor mu?
+
+---
+### ⏱️ HANGFIRE + EMAİL KUYRUK (27-29)
+- [ ] **27.** 3 Auth Email (Welcome/ResetPassword/2FA): Handler içinde `await _emailService.SendAsync` YOK! Yerine `BackgroundJob.Enqueue<EmailSenderJob>(...)` FIRE-AND-FORGET kullanıldı mı? (KURAL 16 / A24)
+- [ ] **28.** EmailSenderJob: Polly 3 Retry exponential backoff (2sn/4sn/8sn) SmtpException/IOException'da çalışıyor mu? BackgroundJobLog Status Pending→Processing→Succeeded/Failed set ediliyor mu?
+- [ ] **29.** Hangfire Dashboard `/hangfire`: DashboardAuthorization filter ile SADECE SuperAdmin/Admin erişebiliyor mu? NightlyCleanupJob (Her gün 02:00) RecurringJob olarak eklendi mi? (KURAL 16 / A31)
+
+---
+### 🗂️ ODATA + FILE STORAGE + SIGNALR + HEALTH + OTEL (30-37)
+- [ ] **30.** OData v4 Desteği: ODataModelBuilder.cs'de yeni entity için EntitySet + HasKey tanımlandı mı? `app.MapODataRoute("odata", "api/v{version:apiVersion}/odata", ...)` endpointi var mı? (KURAL 18 / A28)
+- [ ] **31.** OData Sınır: MaxTop=100, $count=true, HasApiVersion(1.0/2.0), $expand MaxExpansionDepth=2 ayarları doğru mu?
+- [ ] **32.** File Storage: IFileStorageService interface (Upload/Delete/GetPublicUrl) kullanılıyor mu? Local/Azure impl DI ile seçiliyor, Container Whitelist + Path.GetFileName (Path Traversal Koruması) var mı? (KURAL 20 / A32)
+- [ ] **33.** File Storage: Extension Whitelist + MaxFileSizeBytes=10MB Validator kontrolü yapılıyor mu? AzureBlob ConnectionString Key Vault/User Secrets'te saklanıyor mu?
+- [ ] **34.** SignalR Bildirim: INotificationService + DatabaseNotificationService (Önce DB AppNotification INSERT → Sonra Hub Group Send) kullanılıyor mu? NotificationHub `/hubs/notification` user-{userId} grubuna ekliyor mu? (KURAL 19)
+- [ ] **35.** Health Check: 4 HealthCheck (Database/Smtp/FileStorage/Hangfire) + /health/live, /health/ready, /health/detailed, /health/metrics endpointleri çalışıyor mu?
+- [ ] **36.** OpenTelemetry: AddOpenTelemetry() Tracing (AspNetCore/EF/HttpClient) + Metrics + OTLP/Console/Prometheus exporter'ları configli mi? `/metrics` endpointi Prometheus formatı dönüyor mu?
+- [ ] **37.** BU DOSYAYI (AI_RULES_FOR_THIS_REPO.md) güncellemeyi UNUTTUN MU? Yeni KURAL eklemen gerekiyorsa ekle, Anti-pattern'i güncelle.
 
 ---
 
@@ -521,9 +760,9 @@ Api → Infrastructure → Application → Domain
 
 ---
 
-## EK BÖLÜM 4: YENİ ENTİTY EKLEME REHBERİ (8 ADIM)
+## EK BÖLÜM 4: YENİ ENTİTY EKLEME REHBERİ (11 ADIM)
 
-Yeni bir entity (örn: `Product`, `Category` vb.) eklemek için bu 8 adımı SIRA İLE izleyin. Örnek entity: `Product`
+Yeni bir entity (örn: `Product`, `Category` vb.) eklemek için bu 11 adımı SIRA İLE izleyin. Örnek entity: `Product`. **HİÇBİR ADIMI ATLAMA!**
 
 ### Adım 1: Domain Katmanı
 1. `Domain/Entities/Product.cs` oluştur
@@ -613,6 +852,58 @@ Yeni bir entity (örn: `Product`, `Category` vb.) eklemek için bu 8 adımı SIR
 4. Veritabanında AppUserActivited tablosunda EntityCreated/Updated/Deleted loglarının otomatik düştüğünü doğrula (KURAL 8)
 5. ProductNotFoundException fırlat → StatusCode=404 + ApiResponse.IsSuccess=false + Message=Doğru format? (KURAL 5 doğrulaması)
 
+### Adım 9: ODATA v4 ENTİTYSET TANIMLAMA (ZORUNLU - KURAL 18)
+1. `Api/OData/ODataModelBuilder.cs` dosyasını aç, yeni entity için EDM modele EKLE:
+   ```csharp
+   // Product EntitySet + HasKey
+   builder.EntitySet<Product>("Products").EntityType.HasKey(p => p.Id);
+   // Opsiyonel: Eğer ilişkiler expand edilecekse, yetkiler:
+   builder.EntitySet<Product>("Products").EntityType
+       .Expand(2)    // Max 2 seviye expand (Product → Category → ProductFeatures - KURAL 18.2)
+       .Select()     // $select izni (sadece istediğin kolonları çek
+       .OrderBy()    // $orderby izni
+       .Filter()     // $filter izni
+       .Count()      // $count=true izni (totalCount)
+       .Page(100, 1); // MaxTop=100, PageSize sınırı (appsettings OData:MaxTop ile AYNI olsun
+   ```
+2. Entity'nin API Version ile uyumlu olduğundan emin ol: `builder.EntitySet<Product>("Products").EntityType.HasApiVersion(new ApiVersion(1, 0));` (v1.0)
+3. Entity navigation property (örn: Product → Category) varsa EntityType içinde `.Navigation(k => k.Category) ile tanımla ki $expand çalışsın
+4. OData smoke test: `GET /api/v1/odata/Products?$filter=Price gt 100&$select=Id,Name&$count=true&$top=2` tarayıcıda/postman test et. Toplam 2 kayıt + @odata.count toplam ürün sayısını doğru vermeli (KURAL 18 doğrulaması)
+
+### Adım 10: SEED DATA (GEREKİYORSA (Opsiyonel)
+Eğer yeni entity'nin **sistem çalışır çalışmaz ilk verilerle dolması gerekiyorsa (örn: ProductCategory, Setting tipler, önceden tanımlı statik değerler):
+1. `Infrastructure/Persistence/SeedData/AppDbInitializer.cs` içinde YENİ `SeedProductsAsync() fonksiyonu yaz:
+   ```csharp
+   private static async Task SeedProductsAsync(AppDbContext context, CancellationToken ct)
+   {
+       // ⚠️ Idempotent: Eğer veri varsa TEKRAR EKLEME!
+       if (await context.Products.IgnoreQueryFilters().AnyAsync(ct)) return;
+       
+       var products = new List<Product>
+       {
+           Product.Create("Örnek Ürün 1", 99.90m, "Açıklama"),
+           Product.Create("Örnek Ürün 2", 149.00m, "Açıklama 2"),
+       };
+       await context.Products.AddRangeAsync(products, ct);
+       await context.SaveChangesAsync(ct);
+       _logger.LogInformation("Seed: {Count} Product kaydedildi", products.Count);
+   }
+   ```
+2. `InitializeDatabaseAsync` içinde `await SeedProductsAsync(context, ct);` çağır — çağrı sırası doğru olsun (Foreign key gerekiyorsa sonraya koy).
+3. Seed verilerini **DEĞİŞMEZ ise (Statik enum tipler): Seed fonksiyonunun başında `IgnoreQueryFilters().AnyAsync() return ile idempotent yap. 2. ayağa kalkmada duplicate yaratma.
+4. EF Core Migration sonrası `dotnet ef database update` sonrası DB'de Products tablosunda 2 satır görünmü kontrol et (Adım 8 smoke test).
+
+### Adım 11: YETKİ + ADMİN ENDPOİNTLERİ ROL KONTROLÜ (ZORUNLU - KURAL 14/16)
+Eğer yeni entity ADMIN özelindiyse (ürün/yetki yönetimi, ayarlar,yönetim paneli) AŞAĞIDAKİ 3 KONTROLÜ YAP (Hangfire Dashboard gibi):
+1. **Endpoint Rol Kısıtlaması:** ProductsEndpoints.cs MapGroup içinde `.RequireAuthorization(policy => policy.RequireRole("SuperAdmin,Admin"))` — Customer rolü olmayan erişemesin.
+2. **Handler Ownership Check:** Eğer kullanıcı (User rolü ise kendi Product kaydını (CreatedBy == currentUserId) güncelleyebilmeli, başka kullanıcının Product'ını GÜNCELLEYEMEMELİ/SILEMEMELİ. Handler içinde kontrol et:
+   ```csharp
+   if (product.CreatedBy != currentUserId && !isAdmin)
+       throw new UnauthorizedException("Bu kaydı değiştirme yetkiniz yok");
+   ```
+3. **Delete/Restore/Soft Delete:** GetDeleted ve Restore endpointleri SADECE Admin/SuperAdmin yetkilendirilmelidir (Normal user kendi sildiği ürünü göremez, yönetici görebilir/restore edebilir).
+4. **Loglama:** Bu 3 adımı (oluşturma, güncelleme, silme) AuditEntry + AppUserActivited 2 tabloya da kayıt düştüğünü Adım 8 testleri içinde ayrıca doğrula.
+
 ---
 
 ## EK BÖLÜM 5: SIK KULLANILAN KOMUTLAR
@@ -658,4 +949,5 @@ dotnet user-secrets set "EmailSettings:SmtpPassword" "SMTP_SIFREN"
 
 ---
 
-**Version**: 2.0 | **Tarih**: 2026-09-30 | **Tek Kural Dosyası**: AI_RULES_FOR_THIS_REPO.md (Başka KURAL MD YOK)
+**Version**: 3.0 | **Tarih**: 2026-09-30 | **Tek Kural Dosyası**: AI_RULES_FOR_THIS_REPO.md (Başka KURAL MD YOK)
+**Son Güncelleme**: v3.0 14 Yeni Özellik (RBAC/RateLimit/Hangfire/AuditEntry/OData/SignalR/FileStorage/OTel/HealthCheck/ApiVersioning/RestoreSoftDelete/Lockout/SecurityStamp) — 7 Yeni KURAL K14-K20, 12 Anti-pattern A24-A35, Checklist 17→37 madde, Entity Rehberi 8→11 adım

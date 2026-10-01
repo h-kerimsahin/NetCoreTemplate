@@ -1,4 +1,4 @@
-﻿using NetCoreTemplate.Domain.Enums;
+using NetCoreTemplate.Domain.Enums;
 
 namespace NetCoreTemplate.Domain.Entities.Seedworks;
 
@@ -59,5 +59,14 @@ public abstract class BaseEntity
         DeletedDate = DateTime.UtcNow;
         ModifiedBy = userId;
         ModifiedDate = DateTime.UtcNow;
+    }
+
+    public virtual void Restore(Guid? restoredByUserId = null)
+    {
+        Status = EntityStatus.Active;
+        DeletedDate = null;
+        DeletedBy = null;
+        ModifiedDate = DateTime.UtcNow;
+        ModifiedBy = restoredByUserId;
     }
 }
