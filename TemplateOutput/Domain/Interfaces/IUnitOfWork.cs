@@ -1,4 +1,4 @@
-﻿using $safeprojectname$.Domain.Interfaces.Repositories;
+using $safeprojectname$.Domain.Interfaces.Repositories;
 
 namespace $safeprojectname$.Domain.Interfaces;
 

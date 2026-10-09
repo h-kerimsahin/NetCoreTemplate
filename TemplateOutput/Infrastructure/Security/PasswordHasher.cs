@@ -1,4 +1,4 @@
-﻿using $safeprojectname$.Domain.Interfaces.Security;
+using $safeprojectname$.Domain.Interfaces.Security;
 
 namespace $safeprojectname$.Infrastructure.Security;
 

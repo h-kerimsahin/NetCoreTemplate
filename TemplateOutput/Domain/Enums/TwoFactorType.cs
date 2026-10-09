@@ -1,4 +1,4 @@
-﻿namespace $safeprojectname$.Domain.Enums;
+namespace $safeprojectname$.Domain.Enums;
 
 public enum TwoFactorType
 {

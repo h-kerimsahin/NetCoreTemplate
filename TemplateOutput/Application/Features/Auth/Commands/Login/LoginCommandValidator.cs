@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace $safeprojectname$.Application.Features.Auth.Commands.Login;
 

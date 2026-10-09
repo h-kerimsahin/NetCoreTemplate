@@ -1,4 +1,4 @@
-﻿using $safeprojectname$.Domain.Entities.Seedworks;
+using $safeprojectname$.Domain.Entities.Seedworks;
 
 namespace $safeprojectname$.Domain.Entities;
 

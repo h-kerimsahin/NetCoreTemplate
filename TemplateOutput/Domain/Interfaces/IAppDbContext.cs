@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using $safeprojectname$.Domain.Entities;
 
 namespace $safeprojectname$.Domain.Interfaces;

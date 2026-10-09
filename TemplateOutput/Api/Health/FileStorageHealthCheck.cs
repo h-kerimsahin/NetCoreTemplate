@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using $safeprojectname$.Domain.Interfaces.Services;
 
 namespace $safeprojectname$.Api.Health;

@@ -1,4 +1,4 @@
-﻿using $safeprojectname$.Domain.Entities;
+using $safeprojectname$.Domain.Entities;
 using $safeprojectname$.Domain.Enums;
 
 namespace $safeprojectname$.Domain.Interfaces.Repositories;

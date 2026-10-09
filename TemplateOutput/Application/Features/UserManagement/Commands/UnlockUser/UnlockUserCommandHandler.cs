@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using System.Reflection;
 using $safeprojectname$.Application.DTOs.Common;

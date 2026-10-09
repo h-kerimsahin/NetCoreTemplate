@@ -1,4 +1,4 @@
-﻿namespace $safeprojectname$.Infrastructure.Security;
+namespace $safeprojectname$.Infrastructure.Security;
 
 public class JwtSettings
 {

@@ -1,4 +1,4 @@
-﻿namespace $safeprojectname$.Application.DTOs.Settings;
+namespace $safeprojectname$.Application.DTOs.Settings;
 
 public record PasswordSettings(
     int MinLength = 8,

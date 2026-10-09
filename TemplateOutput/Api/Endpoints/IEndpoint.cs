@@ -1,4 +1,4 @@
-﻿namespace $safeprojectname$.Api.Endpoints;
+namespace $safeprojectname$.Api.Endpoints;
 
 public interface IEndpoint
 {

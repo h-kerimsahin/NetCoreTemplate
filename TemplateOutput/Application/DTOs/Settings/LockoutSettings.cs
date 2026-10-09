@@ -1,4 +1,4 @@
-﻿namespace $safeprojectname$.Application.DTOs.Settings;
+namespace $safeprojectname$.Application.DTOs.Settings;
 
 public record LockoutSettings(
     int MaxFailedAttempts = 5,

@@ -1,4 +1,4 @@
-﻿@$safeprojectname$.Api_HostAddress = http://localhost:5084
+@$safeprojectname$.Api_HostAddress = http://localhost:5084
 
 GET {{$safeprojectname$.Api_HostAddress}}/openapi/v1.json
 Accept: application/json

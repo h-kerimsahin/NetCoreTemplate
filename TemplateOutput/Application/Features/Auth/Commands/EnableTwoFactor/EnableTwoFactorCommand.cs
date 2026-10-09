@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using $safeprojectname$.Application.DTOs.Common;
 
 namespace $safeprojectname$.Application.Features.Auth.Commands.EnableTwoFactor;

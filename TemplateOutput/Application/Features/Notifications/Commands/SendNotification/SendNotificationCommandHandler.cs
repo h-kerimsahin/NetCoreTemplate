@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using $safeprojectname$.Application.DTOs.Common;

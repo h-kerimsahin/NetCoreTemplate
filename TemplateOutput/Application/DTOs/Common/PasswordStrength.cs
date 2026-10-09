@@ -1,4 +1,4 @@
-﻿using $safeprojectname$.Application.DTOs.Settings;
+using $safeprojectname$.Application.DTOs.Settings;
 
 namespace $safeprojectname$.Application.DTOs.Common;
 

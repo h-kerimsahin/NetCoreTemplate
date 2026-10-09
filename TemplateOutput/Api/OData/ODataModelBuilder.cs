@@ -1,4 +1,4 @@
-﻿using Microsoft.OData.ModelBuilder;
+using Microsoft.OData.ModelBuilder;
 using $safeprojectname$.Domain.Entities;
 
 namespace $safeprojectname$.Api.OData;

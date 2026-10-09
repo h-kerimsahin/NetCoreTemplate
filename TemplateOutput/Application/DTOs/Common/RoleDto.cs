@@ -1,4 +1,4 @@
-﻿namespace $safeprojectname$.Application.DTOs.Common;
+namespace $safeprojectname$.Application.DTOs.Common;
 
 public record RoleDto(
     Guid Id,

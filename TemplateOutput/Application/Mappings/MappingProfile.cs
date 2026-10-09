@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using $safeprojectname$.Application.DTOs.Auth;
 using $safeprojectname$.Application.DTOs.Common;
 using $safeprojectname$.Application.DTOs.UserProfile;

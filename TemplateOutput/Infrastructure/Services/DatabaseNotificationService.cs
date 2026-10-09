@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using $safeprojectname$.Domain.Entities;
 using $safeprojectname$.Domain.Enums;
 using $safeprojectname$.Domain.Interfaces;

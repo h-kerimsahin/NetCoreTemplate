@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using $safeprojectname$.Application.DTOs.Auth;
 using $safeprojectname$.Application.DTOs.Common;
 

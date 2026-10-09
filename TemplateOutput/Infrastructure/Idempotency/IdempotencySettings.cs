@@ -1,4 +1,4 @@
-﻿namespace $safeprojectname$.Infrastructure.Idempotency;
+namespace $safeprojectname$.Infrastructure.Idempotency;
 
 public class IdempotencySettings
 {

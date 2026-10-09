@@ -1,11 +1,18 @@
 # ============================================================
 #  KrmShn Net Core Backend Project - Visual Studio Template Builder
 # ============================================================
-#  Usage: ./build-template.ps1
+#  Usage: ./build-template.ps1                 [SAFE - wizard disabled, works out-of-the-box]
+#         ./build-template.ps1 -IncludeWizard  [only if wizard DLL installed in GAC/VS path]
 #  Output: ./KrmShnNetCoreBackendProject.zip  (VS template zip)
 # ============================================================
 
+param(
+    [switch]$IncludeWizard = $false
+)
+
 $ErrorActionPreference = "Stop"
+
+$utf8NoBom = New-Object System.Text.UTF8Encoding $false
 
 $RootDir   = Split-Path -Parent $MyInvocation.MyCommand.Path
 $OutDir    = Join-Path $RootDir "TemplateOutput"
@@ -44,10 +51,6 @@ function Copy-TemplateFolder {
         # Extension/wildcard exclude
         foreach ($ex in $AllExtExcludes) { if ($relNorm -like $ex) { return } }
 
-        # Path pattern exclude (both slash variants)
-        if ($relNorm -like "Migrations/*Designer.cs") { return }
-        if ($relNorm -like "Migrations/*ModelSnapshot.cs") { return }
-
         # Rename files that contain "NetCoreTemplate" -> "$safeprojectname$"
         $newRel = $rel -replace "NetCoreTemplate", "`$safeprojectname`$"
 
@@ -70,7 +73,7 @@ function Copy-TemplateFolder {
             $t = $t -replace "NetCoreTemplate", "`$safeprojectname`$"
             # Replace GUIDs in .slnx / .csproj references with template placeholders
             $t = $t -replace [regex]::Escape("00000000-0000-0000-0000-000000000001"), "`$guid1`$"
-            [System.IO.File]::WriteAllText($destPath, $t, [System.Text.Encoding]::UTF8)
+            [System.IO.File]::WriteAllText($destPath, $t, $utf8NoBom)
         }
     }
 }
@@ -117,7 +120,8 @@ $domainVst = @"
 $projFiles | ForEach-Object {
     $rel = $_.Substring((Join-Path $OutDir "Domain").Length + 1)
     if ($rel -notlike "*.vstemplate" -and $rel -notlike "*.csproj") {
-        $domainVst += "      <ProjectItem ReplaceParameters=`"true`" TargetFileName=`"$rel`">$rel</ProjectItem>`r`n"
+        $relSrc = $rel -replace "\\", "/"
+        $domainVst += "      <ProjectItem ReplaceParameters=`"true`" TargetFileName=`"$rel`">$relSrc</ProjectItem>`r`n"
     }
 }
 $domainVst += @"
@@ -125,7 +129,7 @@ $domainVst += @"
   </TemplateContent>
 </VSTemplate>
 "@
-[System.IO.File]::WriteAllText((Join-Path $OutDir "Domain\Domain.vstemplate"), $domainVst, [System.Text.Encoding]::UTF8)
+[System.IO.File]::WriteAllText((Join-Path $OutDir "Domain\Domain.vstemplate"), $domainVst, $utf8NoBom)
 
 # --- Application.vstemplate ---
 Write-Host "Writing Application.vstemplate"
@@ -148,7 +152,8 @@ $appVst = @"
 $projFiles | ForEach-Object {
     $rel = $_.Substring((Join-Path $OutDir "Application").Length + 1)
     if ($rel -notlike "*.vstemplate" -and $rel -notlike "*.csproj") {
-        $appVst += "      <ProjectItem ReplaceParameters=`"true`" TargetFileName=`"$rel`">$rel</ProjectItem>`r`n"
+        $relSrc = $rel -replace "\\", "/"
+        $appVst += "      <ProjectItem ReplaceParameters=`"true`" TargetFileName=`"$rel`">$relSrc</ProjectItem>`r`n"
     }
 }
 $appVst += @"
@@ -156,7 +161,7 @@ $appVst += @"
   </TemplateContent>
 </VSTemplate>
 "@
-[System.IO.File]::WriteAllText((Join-Path $OutDir "Application\Application.vstemplate"), $appVst, [System.Text.Encoding]::UTF8)
+[System.IO.File]::WriteAllText((Join-Path $OutDir "Application\Application.vstemplate"), $appVst, $utf8NoBom)
 
 # --- Infrastructure.vstemplate ---
 Write-Host "Writing Infrastructure.vstemplate"
@@ -179,7 +184,8 @@ $infVst = @"
 $projFiles | ForEach-Object {
     $rel = $_.Substring((Join-Path $OutDir "Infrastructure").Length + 1)
     if ($rel -notlike "*.vstemplate" -and $rel -notlike "*.csproj") {
-        $infVst += "      <ProjectItem ReplaceParameters=`"true`" TargetFileName=`"$rel`">$rel</ProjectItem>`r`n"
+        $relSrc = $rel -replace "\\", "/"
+        $infVst += "      <ProjectItem ReplaceParameters=`"true`" TargetFileName=`"$rel`">$relSrc</ProjectItem>`r`n"
     }
 }
 $infVst += @"
@@ -187,7 +193,7 @@ $infVst += @"
   </TemplateContent>
 </VSTemplate>
 "@
-[System.IO.File]::WriteAllText((Join-Path $OutDir "Infrastructure\Infrastructure.vstemplate"), $infVst, [System.Text.Encoding]::UTF8)
+[System.IO.File]::WriteAllText((Join-Path $OutDir "Infrastructure\Infrastructure.vstemplate"), $infVst, $utf8NoBom)
 
 # --- Api.vstemplate ---
 Write-Host "Writing Api.vstemplate"
@@ -210,7 +216,8 @@ $apiVst = @"
 $projFiles | ForEach-Object {
     $rel = $_.Substring((Join-Path $OutDir "Api").Length + 1)
     if ($rel -notlike "*.vstemplate" -and $rel -notlike "*.csproj") {
-        $apiVst += "      <ProjectItem ReplaceParameters=`"true`" TargetFileName=`"$rel`">$rel</ProjectItem>`r`n"
+        $relSrc = $rel -replace "\\", "/"
+        $apiVst += "      <ProjectItem ReplaceParameters=`"true`" TargetFileName=`"$rel`">$relSrc</ProjectItem>`r`n"
     }
 }
 $apiVst += @"
@@ -218,7 +225,7 @@ $apiVst += @"
   </TemplateContent>
 </VSTemplate>
 "@
-[System.IO.File]::WriteAllText((Join-Path $OutDir "Api\Api.vstemplate"), $apiVst, [System.Text.Encoding]::UTF8)
+[System.IO.File]::WriteAllText((Join-Path $OutDir "Api\Api.vstemplate"), $apiVst, $utf8NoBom)
 
 # ==============================================================
 #  Generate solution file (.slnx) with template GUIDs
@@ -237,11 +244,13 @@ $slnx = @"
   </Folder>
 </Solution>
 "@
-[System.IO.File]::WriteAllText((Join-Path $OutDir "`$safeprojectname`$.slnx"), $slnx, [System.Text.Encoding]::UTF8)
+[System.IO.File]::WriteAllText((Join-Path $OutDir "`$safeprojectname`$.slnx"), $slnx, $utf8NoBom)
 
 # ==============================================================
-#  OPTIONAL: Build VS Template Wizard DLL (if project exists)
-#  This gives users a DB Connection String + JWT Secret picker GUI
+#  OPTIONAL: Build VS Template Wizard DLL (only when -IncludeWizard flag is used)
+#  IMPORTANT: The wizard DLL CANNOT be loaded from inside the .zip by Visual Studio.
+#  To use it you MUST install the DLL in the GAC or copy it to VS PrivateAssemblies.
+#  Default build therefore DISABLES the wizard so the template works out of the box.
 # ==============================================================
 $WizSrc  = Join-Path $RootDir "TemplateWizards\KrmShn.VsTemplateWizards.csproj"
 $WizDir  = Join-Path $RootDir "TemplateWizards"
@@ -249,24 +258,28 @@ $WizOut  = Join-Path $RootDir "TemplateWizards\bin\Release"
 $WizDll  = Join-Path $WizOut "KrmShn.VsTemplateWizards.dll"
 $WizInZip = Join-Path $OutDir "KrmShn.VsTemplateWizards.dll"
 
-$IncludeWizard = $false
-if (Test-Path $WizSrc) {
-    Write-Host "[Wizard] Building Template Wizard DLL (net472)..."
+$UseWizard = $false
+if ($IncludeWizard.IsPresent -and (Test-Path $WizSrc)) {
+    Write-Host "[Wizard] -IncludeWizard flag set. Building Template Wizard DLL (net472)..."
     try {
         Push-Location $WizDir
         dotnet build $WizSrc -c Release -v q --nologo 2>&1 | Out-Null
         Pop-Location
         if (Test-Path $WizDll) {
             Copy-Item -Path $WizDll -Destination $WizInZip -Force
-            Write-Host "[Wizard] OK: $WizDll -> $WizInZip"
-            $IncludeWizard = $true
+            Write-Host "[Wizard] DLL copied: $WizDll -> $WizInZip"
+            Write-Warning "[Wizard] Reminder: Wizard DLL will NOT load from .zip! Install to GAC or copy to VS PrivateAssemblies first."
+            $UseWizard = $true
         } else {
-            Write-Warning "[Wizard] Build completed but DLL not found at $WizDll. Skipping wizard."
+            Pop-Location
+            Write-Warning "[Wizard] Build completed but DLL not found at $WizDll. Wizard DISABLED."
         }
     } catch {
         Pop-Location
-        Write-Warning "[Wizard] DLL build failed ($($_.Exception.Message)). Wizard UI will be skipped - default values used."
+        Write-Warning "[Wizard] DLL build failed ($($_.Exception.Message)). Wizard DISABLED."
     }
+} else {
+    Write-Host "[Wizard] Skipped (use -IncludeWizard to enable; wizard NOT recommended for default template)."
 }
 
 # Create root multi-project .vstemplate
@@ -290,17 +303,17 @@ $rootVst = @"
     <ProjectCollection>
       <ProjectItem ReplaceParameters="true" TargetFileName="`$safeprojectname`$.slnx">`$safeprojectname`$.slnx</ProjectItem>
       <SolutionFolder Name="Core">
-        <ProjectTemplateLink ProjectName="`$safeprojectname`$.Domain" CopyParameters="true">Domain\Domain.vstemplate</ProjectTemplateLink>
-        <ProjectTemplateLink ProjectName="`$safeprojectname`$.Application" CopyParameters="true">Application\Application.vstemplate</ProjectTemplateLink>
-        <ProjectTemplateLink ProjectName="`$safeprojectname`$.Infrastructure" CopyParameters="true">Infrastructure\Infrastructure.vstemplate</ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="`$safeprojectname`$.Domain" CopyParameters="true">Domain/Domain.vstemplate</ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="`$safeprojectname`$.Application" CopyParameters="true">Application/Application.vstemplate</ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="`$safeprojectname`$.Infrastructure" CopyParameters="true">Infrastructure/Infrastructure.vstemplate</ProjectTemplateLink>
       </SolutionFolder>
       <SolutionFolder Name="Presentation">
-        <ProjectTemplateLink ProjectName="`$safeprojectname`$.Api" CopyParameters="true">Api\Api.vstemplate</ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="`$safeprojectname`$.Api" CopyParameters="true">Api/Api.vstemplate</ProjectTemplateLink>
       </SolutionFolder>
     </ProjectCollection>
   </TemplateContent>
 "@ + "`r`n"
-if ($IncludeWizard) {
+if ($UseWizard) {
     $rootVst += @"
   <WizardExtension>
     <Assembly>KrmShn.VsTemplateWizards, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</Assembly>
@@ -316,7 +329,7 @@ if ($IncludeWizard) {
 $rootVst += @"
 </VSTemplate>
 "@
-[System.IO.File]::WriteAllText((Join-Path $OutDir "KrmShnNetCoreBackendProject.vstemplate"), $rootVst, [System.Text.Encoding]::UTF8)
+[System.IO.File]::WriteAllText((Join-Path $OutDir "KrmShnNetCoreBackendProject.vstemplate"), $rootVst, $utf8NoBom)
 
 # ==============================================================
 #  Icon + README for the template

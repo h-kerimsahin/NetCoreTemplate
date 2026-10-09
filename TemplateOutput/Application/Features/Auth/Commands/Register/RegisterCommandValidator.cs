@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using $safeprojectname$.Application.Validators;
 
 namespace $safeprojectname$.Application.Features.Auth.Commands.Register;

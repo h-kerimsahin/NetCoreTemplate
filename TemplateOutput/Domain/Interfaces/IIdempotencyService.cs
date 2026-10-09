@@ -1,4 +1,4 @@
-﻿namespace $safeprojectname$.Domain.Interfaces;
+namespace $safeprojectname$.Domain.Interfaces;
 
 public interface IIdempotencyService
 {

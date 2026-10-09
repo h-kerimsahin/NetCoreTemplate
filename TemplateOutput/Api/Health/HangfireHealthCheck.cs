@@ -1,4 +1,4 @@
-﻿using Hangfire;
+using Hangfire;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace $safeprojectname$.Api.Health;

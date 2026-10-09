@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.OData;
+using Microsoft.AspNetCore.OData;
 
 namespace $safeprojectname$.Api.ApiVersioning;
 

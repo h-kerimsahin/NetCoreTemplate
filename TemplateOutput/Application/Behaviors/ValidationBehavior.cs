@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
 using ValidationException = $safeprojectname$.Application.Exceptions.ValidationException;
 

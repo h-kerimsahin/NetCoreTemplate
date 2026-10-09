@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Options;
 using $safeprojectname$.Domain.Interfaces;
 using $safeprojectname$.Infrastructure.Idempotency;
 using System.Security.Claims;

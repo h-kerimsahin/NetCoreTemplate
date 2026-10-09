@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using $safeprojectname$.Application.DTOs.Common;
 using $safeprojectname$.Domain.Enums;

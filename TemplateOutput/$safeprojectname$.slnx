@@ -1,4 +1,4 @@
-﻿<Solution>
+<Solution>
   <Folder Name="/Core/">
     <Project Path="Core/$safeprojectname$.Domain/$safeprojectname$.Domain.csproj" />
     <Project Path="Core/$safeprojectname$.Application/$safeprojectname$.Application.csproj" />

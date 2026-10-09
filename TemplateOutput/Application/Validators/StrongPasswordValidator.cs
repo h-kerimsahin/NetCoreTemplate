@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using FluentValidation;
 using $safeprojectname$.Application.DTOs.Settings;

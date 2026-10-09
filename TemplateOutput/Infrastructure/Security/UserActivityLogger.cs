@@ -1,4 +1,4 @@
-﻿using $safeprojectname$.Domain.Enums;
+using $safeprojectname$.Domain.Enums;
 using $safeprojectname$.Domain.Interfaces;
 using $safeprojectname$.Domain.Interfaces.Security;
 

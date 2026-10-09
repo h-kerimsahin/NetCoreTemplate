@@ -1,4 +1,4 @@
-﻿namespace $safeprojectname$.Infrastructure.Services;
+namespace $safeprojectname$.Infrastructure.Services;
 
 public class EmailSettings
 {

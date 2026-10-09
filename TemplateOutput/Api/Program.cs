@@ -1,4 +1,4 @@
-﻿using $safeprojectname$.Api;
+using $safeprojectname$.Api;
 using $safeprojectname$.Infrastructure.Persistence.SeedData;
 using Serilog;
 

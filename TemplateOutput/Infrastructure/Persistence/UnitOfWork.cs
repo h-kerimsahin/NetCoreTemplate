@@ -1,4 +1,4 @@
-﻿using $safeprojectname$.Domain.Interfaces;
+using $safeprojectname$.Domain.Interfaces;
 using $safeprojectname$.Domain.Interfaces.Repositories;
 using $safeprojectname$.Infrastructure.Persistence.Repositories;
 

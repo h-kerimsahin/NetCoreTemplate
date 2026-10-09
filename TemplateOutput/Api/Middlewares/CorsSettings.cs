@@ -1,4 +1,4 @@
-﻿namespace $safeprojectname$.Api.Middlewares;
+namespace $safeprojectname$.Api.Middlewares;
 
 public static class CorsSettings
 {

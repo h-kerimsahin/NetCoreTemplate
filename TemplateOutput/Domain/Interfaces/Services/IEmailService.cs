@@ -1,4 +1,4 @@
-﻿namespace $safeprojectname$.Domain.Interfaces.Services;
+namespace $safeprojectname$.Domain.Interfaces.Services;
 
 public interface IEmailService
 {

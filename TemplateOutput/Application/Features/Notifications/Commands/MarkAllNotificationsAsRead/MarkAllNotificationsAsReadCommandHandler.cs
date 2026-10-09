@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using $safeprojectname$.Application.DTOs.Common;
 using $safeprojectname$.Domain.Interfaces;
