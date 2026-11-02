@@ -13,31 +13,29 @@
 
 ***
 
-## 📦 Baixar Template do Visual Studio (GitHub Release)
+## 📦 Instalação do Template .NET (GitHub Release)
 
-> Instale no Visual Studio com um clique e evite configuração do zero a cada novo projeto!
+> Instale uma vez com um único comando e evite configuração do zero a cada novo projeto!
 
 [![Latest Release](https://img.shields.io/github/v/release/h-kerimsahin/NetCoreTemplate?display_name=tag&sort=semver&label=Release&style=for-the-badge&logo=github)](https://github.com/h-kerimsahin/NetCoreTemplate/releases/latest)
-[![Release Workflow Status](https://github.com/h-kerimsahin/NetCoreTemplate/actions/workflows/publish-template-release.yml/badge.svg)](https://github.com/h-kerimsahin/NetCoreTemplate/actions/workflows/publish-template-release.yml)
 
-**Link:** [**Releases → Template ZIP**](https://github.com/h-kerimsahin/NetCoreTemplate/releases/latest)
+**Link:** [**Releases → `KrmShnNetCoreBackendProject.zip`**](https://github.com/h-kerimsahin/NetCoreTemplate/releases/latest)
 
 | # | Passo |
 |---|-------|
-| 1 | Baixe **`KrmShnNetCoreBackendProject.zip`** da página de Releases |
-| 2 | Copie para esta pasta: `%USERPROFILE%\Documents\Visual Studio 2022\Templates\ProjectTemplates\` |
-| 3 | **Reinicie** o Visual Studio |
-| 4 | *Create a new project* → pesquise: **`KrmShn`** → selecione **KrmShn Net Core Backend Project** |
+| 1 | Baixe **`KrmShnNetCoreBackendProject.zip`** da página de Releases e extraia em uma pasta |
+| 2 | Execute `dotnet new install <pasta-extraída>` |
+| 3 | Crie seu projeto com `dotnet new krmbackend -n MyShop` (todas as pastas e classes vêm automaticamente) |
+| 4 | Para remover o template: `dotnet new uninstall <pasta-extraída>` |
 
-**Publicando uma Release (Desenvolvedor):**
-```powershell
-# Opção A - release direta + upload com gh CLI
-.\publish-release.ps1 -Version 1.2.0
-
-# Opção B - apenas envie uma tag, publicação automática via workflow
-git tag -a v1.2.0 -m "Release v1.2.0"
-git push origin v1.2.0
+```bash
+dotnet new install ./KrmShnNetCoreBackendProject
+dotnet new list krmbackend
+dotnet new krmbackend -n MyShop
 ```
+
+> O template substitui o nome `NetCoreTemplate` na árvore de código pelo nome do seu projeto: nomes de pastas, namespaces, caminhos do `.slnx` e `ProjectReference` incluídos.
+> Também aparece no Visual Studio 2022 (16.10+) na tela **Create a new project** → pesquise: **`KrmShn`**.
 
 ***
 

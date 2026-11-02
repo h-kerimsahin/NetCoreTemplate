@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json.schemastore.org/template",
+  "author": "KrmShn",
+  "classifications": [ "Web", "Web API", "Clean Architecture", "Backend" ],
+  "identity": "KrmShn.NetCoreBackend.Solution",
+  "name": "KrmShn Net Core Backend Project",
+  "shortName": "krmbackend",
+  "description": "Production-ready .NET 11 Clean Architecture backend solution with Domain, Application, Infrastructure and Api projects. Identity + RBAC, 2FA, JWT, CQRS (MediatR), FluentValidation, EF Core, Hangfire, SignalR, OData v4, OpenTelemetry, Rate Limiting, Idempotency, Soft-Delete + Audit, Local/Azure file storage, Swagger + Scalar UI.",
+  "defaultName": "KrmShnBackend",
+  "sourceName": "NetCoreTemplate",
+  "preferNameDirectory": true,
+  "symbols": {
+    "connectionString": {
+      "type": "parameter",
+      "datatype": "text",
+      "displayName": "Veritabani baglanti dizesi (appsettings.json)",
+      "description": "Olusturulan proje icin varsayilan DefaultConnection degeri.",
+      "defaultValue": "Server=(localdb)\\MSSQLLocalDB;Database=NetCoreTemplate;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true",
+      "replaces": "__CONNECTION_STRING__"
+    },
+    "jwtSecret": {
+      "type": "parameter",
+      "datatype": "text",
+      "displayName": "JWT imzalama anahtari",
+      "description": "Development icin kullanilacak JWT secret degeri. Production'da secret store kullanin.",
+      "defaultValue": "CHANGE_ME_DEV_ONLY_7f3a9c1e5b8d2f4a6c0e8b1d3f5a7c9e2b4d6f8a0c1e3b5d7f9a1c3e5",
+      "replaces": "__JWT_SECRET__"
+    },
+    "fileStorageProvider": {
+      "type": "parameter",
+      "datatype": "choice",
+      "displayName": "Dosya depolama saglayicisi",
+      "description": "IFileStorageService icin varsayilan provider secimi.",
+      "defaultValue": "Local",
+      "replaces": "__FILE_STORAGE_PROVIDER__",
+      "choices": [
+        {
+          "choice": "Local",
+          "displayName": "Local",
+          "description": "Dosyalari wwwroot/uploads altinda saklar."
+        },
+        {
+          "choice": "AzureBlob",
+          "displayName": "Azure Blob",
+          "description": "Azure Blob ayarlarina gore depolama kullanir."
+        }
+      ]
+    },
+    "enableDetailedHealthChecks": {
+      "type": "parameter",
+      "datatype": "bool",
+      "displayName": "Detayli health check ciktilarini dahil et",
+      "description": "/health/ready yanitinda detayli sonuc alanlarini acik baslatir.",
+      "defaultValue": "true"
+    },
+    "enableOpenTelemetryTracing": {
+      "type": "parameter",
+      "datatype": "bool",
+      "displayName": "OpenTelemetry tracing'i etkin baslat",
+      "description": "appsettings.json icindeki OpenTelemetry.EnableTracing degerini ayarlar.",
+      "defaultValue": "true"
+    },
+    "enableOpenTelemetryMetrics": {
+      "type": "parameter",
+      "datatype": "bool",
+      "displayName": "OpenTelemetry metrics'i etkin baslat",
+      "description": "appsettings.json icindeki OpenTelemetry.EnableMetrics degerini ayarlar.",
+      "defaultValue": "true"
+    },
+    "includeSampleV2Endpoint": {
+      "type": "parameter",
+      "datatype": "bool",
+      "displayName": "Ornek V2 test endpoint'ini dahil et",
+      "description": "Presentation katmanindaki V2TestEndpoints.cs dosyasini template cikisina ekler.",
+      "defaultValue": "true"
+    },
+    "enableDetailedHealthChecksJson": {
+      "type": "generated",
+      "generator": "casing",
+      "parameters": {
+        "source": "enableDetailedHealthChecks",
+        "toLower": true
+      },
+      "replaces": "__ENABLE_DETAILED_HEALTHCHECKS__"
+    },
+    "enableOpenTelemetryTracingJson": {
+      "type": "generated",
+      "generator": "casing",
+      "parameters": {
+        "source": "enableOpenTelemetryTracing",
+        "toLower": true
+      },
+      "replaces": "__ENABLE_OTEL_TRACING__"
+    },
+    "enableOpenTelemetryMetricsJson": {
+      "type": "generated",
+      "generator": "casing",
+      "parameters": {
+        "source": "enableOpenTelemetryMetrics",
+        "toLower": true
+      },
+      "replaces": "__ENABLE_OTEL_METRICS__"
+    }
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "condition": "(!includeSampleV2Endpoint)",
+          "exclude": [
+            "Presentation/NetCoreTemplate.Api/Endpoints/V2TestEndpoints.cs"
+          ]
+        }
+      ]
+    }
+  ],
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  }
+}

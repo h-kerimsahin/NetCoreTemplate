@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json.schemastore.org/vs-2017.3.host",
+  "order": 0,
+  "symbolInfo": [
+    {
+      "id": "connectionString",
+      "name": {
+        "text": "Veritabani baglanti dizesi (appsettings.json)"
+      },
+      "isVisible": true
+    },
+    {
+      "id": "jwtSecret",
+      "name": {
+        "text": "JWT imzalama anahtari"
+      },
+      "isVisible": true
+    },
+    {
+      "id": "fileStorageProvider",
+      "name": {
+        "text": "Dosya depolama saglayicisi"
+      },
+      "isVisible": true
+    },
+    {
+      "id": "enableDetailedHealthChecks",
+      "name": {
+        "text": "Detayli health check ciktilarini dahil et"
+      },
+      "isVisible": true
+    },
+    {
+      "id": "enableOpenTelemetryTracing",
+      "name": {
+        "text": "OpenTelemetry tracing'i etkin baslat"
+      },
+      "isVisible": true
+    },
+    {
+      "id": "enableOpenTelemetryMetrics",
+      "name": {
+        "text": "OpenTelemetry metrics'i etkin baslat"
+      },
+      "isVisible": true
+    },
+    {
+      "id": "includeSampleV2Endpoint",
+      "name": {
+        "text": "Ornek V2 test endpoint'ini dahil et"
+      },
+      "isVisible": true
+    }
+  ]
+}

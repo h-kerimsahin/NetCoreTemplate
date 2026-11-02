@@ -25,6 +25,9 @@ public class Setting : BaseEntity
     public void Update(string? value, string? description = null)
     {
         Value = value;
-        if (description != null) Description = description;
+        if (description != null)
+        {
+            Description = description;
+        }
     }
 }

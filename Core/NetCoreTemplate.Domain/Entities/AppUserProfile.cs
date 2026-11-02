@@ -34,7 +34,10 @@ public class AppUserProfile : BaseEntity
         Address = address;
         City = city;
         Country = country;
-        if (avatarUrl != null) AvatarUrl = avatarUrl;
+        if (avatarUrl != null)
+        {
+            AvatarUrl = avatarUrl;
+        }
         Bio = bio;
     }
 

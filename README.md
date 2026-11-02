@@ -13,31 +13,29 @@
 
 ***
 
-## 📦 Visual Studio Template İndir (GitHub Release)
+## 📦 .NET Template Kurulumu (GitHub Release)
 
-> Tek tıkla Visual Studio'ya kur ve her yeni projede sıfırdan kurulum yapma!
+> Tek komutla kur, her yeni projede sıfırdan kurulum yapma!
 
 [![Latest Release](https://img.shields.io/github/v/release/h-kerimsahin/NetCoreTemplate?display_name=tag&sort=semver&label=Release&style=for-the-badge&logo=github)](https://github.com/h-kerimsahin/NetCoreTemplate/releases/latest)
-[![Release Workflow Status](https://github.com/h-kerimsahin/NetCoreTemplate/actions/workflows/publish-template-release.yml/badge.svg)](https://github.com/h-kerimsahin/NetCoreTemplate/actions/workflows/publish-template-release.yml)
 
-**Adres:** [**Releases → Template ZIP**](https://github.com/h-kerimsahin/NetCoreTemplate/releases/latest)
+**Adres:** [**Releases → `KrmShnNetCoreBackendProject.zip`**](https://github.com/h-kerimsahin/NetCoreTemplate/releases/latest)
 
 | # | Adım |
 |---|------|
-| 1 | Release sayfasından **`KrmShnNetCoreBackendProject.zip`** indir |
-| 2 | Şu klasöre kopyala: `%USERPROFILE%\Documents\Visual Studio 2022\Templates\ProjectTemplates\` |
-| 3 | Visual Studio'yu **yeniden başlat** |
-| 4 | *Create a new project* → arama: **`KrmShn`** → **KrmShn Net Core Backend Project** |
+| 1 | Release sayfasından **`KrmShnNetCoreBackendProject.zip`** indir ve bir klasöre çıkar |
+| 2 | `dotnet new install <çıkardığın-klasör>` komutunu çalıştır |
+| 3 | `dotnet new krmbackend -n MyShop` ile projeyi oluştur (tüm klasör ve sınıflar otomatik gelir) |
+| 4 | Şablonu kaldırmak için: `dotnet new uninstall <çıkardığın-klasör>` |
 
-**Release Yayınlamak (Geliştirici):**
-```powershell
-# Seçenek A - gh CLI ile direkt release + upload
-.\publish-release.ps1 -Version 1.2.0
-
-# Seçenek B - sadece tag push, workflow ile otomatik yayın
-git tag -a v1.2.0 -m "Release v1.2.0"
-git push origin v1.2.0
+```bash
+dotnet new install ./KrmShnNetCoreBackendProject
+dotnet new list krmbackend
+dotnet new krmbackend -n MyShop
 ```
+
+> Şablon, kaynak ağacındaki `NetCoreTemplate` adını verdiğin proje adıyla değiştirir: klasör adları, namespace'ler, `.slnx` ve `ProjectReference` yolları dahil.
+> Visual Studio 2022 (16.10+) **Create a new project** ekranında da görünür → arama: **`KrmShn`**.
 
 ***
 
