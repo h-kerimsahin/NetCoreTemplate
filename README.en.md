@@ -6,16 +6,16 @@
 
 </div>
 
-# 🏗️ NetCoreTemplate — Production Grade .NET 11 Clean Architecture API
+# 🏗️ NetCoreTemplate — Production Grade .NET 11 Clean Architecture Solution Template
 
-> **Production-ready**, multi-layered, security-focused modern ASP.NET Core Web API template.\
+> **Production-ready**, multi-layered, security-focused modern ASP.NET Core Web API solution template.\
 > Identity+RBAC, MediatR (CQRS), Hangfire, SignalR, OData v4, OpenTelemetry, 3-layer Rate Limit, Idempotency, Soft-Delete + Audit, Local/Azure File Storage, Swagger + Scalar UI.
 
 ***
 
 ## 📦 .NET Template Installation (GitHub Release)
 
-> Install once with a single command, no zero-setup for every new project!
+> Install once for `dotnet new` and Visual Studio, then generate the same ready-made architecture for every new project!
 
 [![Latest Release](https://img.shields.io/github/v/release/h-kerimsahin/NetCoreTemplate?display_name=tag&sort=semver&label=Release&style=for-the-badge&logo=github)](https://github.com/h-kerimsahin/NetCoreTemplate/releases/latest)
 
@@ -25,7 +25,7 @@
 |---|------|
 | 1 | Download **`KrmShnNetCoreBackendProject.zip`** from the Releases page and extract it to a folder |
 | 2 | Run `dotnet new install <extracted-folder>` |
-| 3 | Create your project with `dotnet new krmbackend -n MyShop` (all folders and classes come automatically) |
+| 3 | Create your project with `dotnet new krmbackend -n MyShop` (all folders, classes, namespaces and solution files come automatically) |
 | 4 | To remove the template: `dotnet new uninstall <extracted-folder>` |
 
 ```bash
@@ -36,6 +36,7 @@ dotnet new krmbackend -n MyShop
 
 > The template replaces the `NetCoreTemplate` name in the source tree with your project name: folder names, namespaces, `.slnx` and `ProjectReference` paths included.
 > It also appears in Visual Studio 2022 (16.10+) **Create a new project** screen → search: **`KrmShn`**.
+> In the **Additional information** screen, you can configure the connection string, JWT secret, file storage provider, health check options and OpenTelemetry settings.
 
 ***
 

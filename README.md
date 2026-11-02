@@ -6,16 +6,16 @@
 
 </div>
 
-# 🏗️ NetCoreTemplate — Production Grade .NET 11 Clean Architecture API
+# 🏗️ NetCoreTemplate — Production Grade .NET 11 Clean Architecture Solution Template
 
-> **Production hazır**, çok katmanlı, güvenlik odaklı modern ASP.NET Core Web API template'i.\
+> **Production hazır**, çok katmanlı, güvenlik odaklı modern ASP.NET Core Web API solution template'i.\
 > Identity+RBAC, MediatR (CQRS), Hangfire, SignalR, OData v4, OpenTelemetry, 3-katman Rate Limit, Idempotency, Soft-Delete + Audit, Local/Azure File Storage, Swagger + Scalar UI.
 
 ***
 
 ## 📦 .NET Template Kurulumu (GitHub Release)
 
-> Tek komutla kur, her yeni projede sıfırdan kurulum yapma!
+> `dotnet new` ve Visual Studio ile bir kez kur, her yeni projede aynı hazır mimariyi üret!
 
 [![Latest Release](https://img.shields.io/github/v/release/h-kerimsahin/NetCoreTemplate?display_name=tag&sort=semver&label=Release&style=for-the-badge&logo=github)](https://github.com/h-kerimsahin/NetCoreTemplate/releases/latest)
 
@@ -25,7 +25,7 @@
 |---|------|
 | 1 | Release sayfasından **`KrmShnNetCoreBackendProject.zip`** indir ve bir klasöre çıkar |
 | 2 | `dotnet new install <çıkardığın-klasör>` komutunu çalıştır |
-| 3 | `dotnet new krmbackend -n MyShop` ile projeyi oluştur (tüm klasör ve sınıflar otomatik gelir) |
+| 3 | `dotnet new krmbackend -n MyShop` ile projeyi oluştur (tüm klasörler, sınıflar, namespace'ler ve çözüm dosyası otomatik gelir) |
 | 4 | Şablonu kaldırmak için: `dotnet new uninstall <çıkardığın-klasör>` |
 
 ```bash
@@ -36,6 +36,7 @@ dotnet new krmbackend -n MyShop
 
 > Şablon, kaynak ağacındaki `NetCoreTemplate` adını verdiğin proje adıyla değiştirir: klasör adları, namespace'ler, `.slnx` ve `ProjectReference` yolları dahil.
 > Visual Studio 2022 (16.10+) **Create a new project** ekranında da görünür → arama: **`KrmShn`**.
+> **Additional information** ekranında connection string, JWT secret, file storage provider, health check ve OpenTelemetry seçenekleri düzenlenebilir.
 
 ***
 

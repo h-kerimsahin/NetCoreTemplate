@@ -6,16 +6,16 @@
 
 </div>
 
-# 🏗️ NetCoreTemplate — Template de API Clean Architecture .NET 11 Nível Produção
+# 🏗️ NetCoreTemplate — Template de Solução Clean Architecture .NET 11 Nível Produção
 
-> Template moderno de ASP.NET Core Web API **pronto para produção**, multicamadas e focado em segurança.\
+> Template moderno de solução ASP.NET Core Web API **pronto para produção**, multicamadas e focado em segurança.\
 > Identity+RBAC, MediatR (CQRS), Hangfire, SignalR, OData v4, OpenTelemetry, Rate Limit de 3 camadas, Idempotência, Soft-Delete + Auditoria, Armazenamento de Arquivos Local/Azure, Swagger + Scalar UI.
 
 ***
 
 ## 📦 Instalação do Template .NET (GitHub Release)
 
-> Instale uma vez com um único comando e evite configuração do zero a cada novo projeto!
+> Instale uma vez para `dotnet new` e Visual Studio e gere a mesma arquitetura pronta em cada novo projeto!
 
 [![Latest Release](https://img.shields.io/github/v/release/h-kerimsahin/NetCoreTemplate?display_name=tag&sort=semver&label=Release&style=for-the-badge&logo=github)](https://github.com/h-kerimsahin/NetCoreTemplate/releases/latest)
 
@@ -25,7 +25,7 @@
 |---|-------|
 | 1 | Baixe **`KrmShnNetCoreBackendProject.zip`** da página de Releases e extraia em uma pasta |
 | 2 | Execute `dotnet new install <pasta-extraída>` |
-| 3 | Crie seu projeto com `dotnet new krmbackend -n MyShop` (todas as pastas e classes vêm automaticamente) |
+| 3 | Crie seu projeto com `dotnet new krmbackend -n MyShop` (todas as pastas, classes, namespaces e arquivos de solução vêm automaticamente) |
 | 4 | Para remover o template: `dotnet new uninstall <pasta-extraída>` |
 
 ```bash
@@ -36,6 +36,7 @@ dotnet new krmbackend -n MyShop
 
 > O template substitui o nome `NetCoreTemplate` na árvore de código pelo nome do seu projeto: nomes de pastas, namespaces, caminhos do `.slnx` e `ProjectReference` incluídos.
 > Também aparece no Visual Studio 2022 (16.10+) na tela **Create a new project** → pesquise: **`KrmShn`**.
+> Na tela **Additional information**, você pode configurar a connection string, o secret JWT, o provedor de armazenamento de arquivos, as opções de health check e o OpenTelemetry.
 
 ***
 
